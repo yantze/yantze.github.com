@@ -16,11 +16,10 @@ script:
 - hexo generate
 - hexo deploy
 after_success:
-- cp .deploy
+- cd .deploy
 - git add -A .
 - git commit -m 'Site updated'
 - git push
 env:
   global:
-  - secure: Aeta26PF+6bVXkZyiv1GIZS0L8eiTSTokZWLFVFNuWAXM8Ct/6/TdTgYEHYIrAvC+/CMelI2XtS6m1oaWdFZaHMl5jX94ABtqB34MrI5NYR30qPmDpzviAa4L7Jt6oJGXxQw2kGM365GbxKhTdaCIp853XTqvXZt3MLEH1SJp5M=
   - secure: AAAtOFeBLK4gRGVshxGzxpSeHs1eJ45jcg/kV2Uvyny/ffvw4/r61C1Zslezi2fT1kIbMuEBAD46PZmqXDTNnKqW9NFBQz4WAFyClUQ4YF/l4JmmgGzy3VZKHSk4q6zfm7D7nsffgN+Z94nZz4AE+pv0AD3VJ+U5iIvWoihcjds=
