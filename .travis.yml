@@ -1,0 +1,32 @@
+language: node_js
+
+node_js:
+  - "0.10"
+
+before_install:
+  # Decrypt the private key
+- openssl aes-256-cbc -K $encrypted_5d48665a2195_key -iv $encrypted_5d48665a2195_iv
+  -in .travis/deploy_id_rsa.enc -out ~\/.ssh/deploy_id_rsa -d
+  # Set the permission of the key
+  - chmod 600 ~/.ssh/id_rsa
+  # Start SSH agent
+  - eval $(ssh-agent)
+  # Add the private key to the system
+  - ssh-add ~/.ssh/id_rsa
+  # Copy SSH config
+  - cp .travis/ssh_config ~/.ssh/config
+  # Set Git config
+  - git config --global user.name "yantze"
+  - git config --global user.email yantze@126.com
+  # Install Hexo
+  - npm install hexo@beta -g
+  # Clone the repository
+  - git clone https://github.com/yantze/yantze.github.com .deploy
+
+script:
+  - hexo generate
+  - hexo deploy
+
+branches:
+  only:
+    - master

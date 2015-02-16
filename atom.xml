@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title><![CDATA[Vastiny]]></title>
+  
+  <link href="/atom.xml" rel="self"/>
+  <link href="http://vastiny.com/"/>
+  <updated>2015-02-16T14:18:03.554Z</updated>
+  <id>http://vastiny.com/</id>
+  
+  <author>
+    <name><![CDATA[yantze]]></name>
+    <email><![CDATA[hi@vastiny.com]]></email>
+  </author>
+  
+  <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[SELINUX]]></title>
+    <link href="http://vastiny.com/2015/02/02/selinux/"/>
+    <id>http://vastiny.com/2015/02/02/selinux/</id>
+    <published>2015-02-02T15:24:00.000Z</published>
+    <updated>2015-02-12T04:19:59.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="中文叙述">中文叙述</h2>
+<p>selinux就是一个强制访问控制系统(Security-Enhanced Linux),一般有两个策略,一个是NSA用的restrict,一个是普通linux的用的targed,下面默认说的都是targed的策略.</p>
+<h3 id="常用情况">常用情况</h3>
+<h4 id="新装的apache服务器启动之后,只能本机访问,其它网络不能访问">新装的apache服务器启动之后,只能本机访问,其它网络不能访问</h4>
+<p>这个是iptable或者centos7的firewall没有开放80端口.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">iptables -A INPUT -p tcp --dport <span class="number">80</span> -j ACCEPT</div><div class="line">service iptables save</div><div class="line"><span class="comment">#or if centos7</span></div><div class="line">firewall-cmd --zone=dmz --add-port=<span class="number">80</span>/tcp --permanent</div></pre></td></tr></table></figure>
+
+<p>网站可以访问后,但是页面是apache的引导页,不是网站目录下的内容.<br>如果你在你的网站目录放的是从windows或者网络上拷贝下来的文件,很有可能selinux判断为httpd无权限读取这些文件,导致apache一直指向的是 /var/www/error/noindex.html或者/usr/share/httpd/noindex目录下的内容<br>有两个解决方法,一个是设置selinux的等级,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># root权限才可以执行</span></div><div class="line">setenforce <span class="number">0</span></div></pre></td></tr></table></figure>
+
+<p>第二个方法是</p>
+<p>给网站目录下的文件设置httpd_sys_content_t域</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">chcon -t default_t -R /var/www/html</div></pre></td></tr></table></figure>
+
+<p>第三个方法是</p>
+<p>如果你换了一个网站目录,或者想做成一个安装包,还想使用selinux,最好用这个方法.把规则添加给selinux.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">semanage fcontext --add --type httpd_sys_content_t <span class="string">"/www(/.*)?"</span></div><div class="line">semanage fcontext --add --type httpd_sys_content_t <span class="string">"/www/html(/.*)?"</span></div></pre></td></tr></table></figure>
+
+<p>这个时候,应该有生成一个policy文件,里面包含了目录相关的权限设置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat /etc/selinux/targeted/contexts/files/file_contexts.local</div></pre></td></tr></table></figure>
+
+<p>是时候用restorecon了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">restorecon -Rv /www/html</div></pre></td></tr></table></figure>
+
+<p>这个时候系统已经告诉你,已经转换成selinux认可的类型或者域了</p>
+<h4 id="限制用户对自己文档的不可操作">限制用户对自己文档的不可操作</h4>
+<p>比如说我安排一个日志检查员,我不想让他执行程序,只是想让他看日志</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sebool allow_guest_<span class="keyword">exec</span>_content off</div></pre></td></tr></table></figure>
+
+<p>这样,那些默认的账户都是不能执行脚本文件的了.</p>
+<h3 id="一个有sudo权限的人,如何对他进行限制呢">一个有sudo权限的人,如何对他进行限制呢</h3>
+<p>当然可以在visudo中有个列表显示这个用户的执行程序名,也可以用这种selinux限制好了规则的方法,这里的restricteduser就是一个拥有sudo权限的账户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">semanage login <span class="operator">-a</span> <span class="operator">-s</span> user_u restricteduser</div></pre></td></tr></table></figure>
+
+<p>这里说明一个就是user_u是user_r和user_t的合体,user_r代表的是可以执行哪些程序,user_t代表的是那些程序它有什么权限.<br>比如说这个用户拥有启动httpd服务的权限,但是他对这个网站的内容确是不可编辑的.</p>
+<h3 id="简明运作">简明运作</h3>
+<p>selinux是构建在linux系统权限控制之上的一套系统,linux权限控制明显的一个问题就是,只分user/group/other,这个other有很多不同的用户,如果other的权限过大,会导致很多的问题出现.<br>selinux要的就是,user的权限是整个selinux系统中最小权限的存在.selinux也有一个天生缺陷,就是总有一个GOD可以操控一切.<br>在redhat系的文件系统中,文件属性后面有个小点或者加号,这个就是selinux和acl的设置:<br>当文件或者文件夹只使用了selinux context的属性，在ls -l时,文件后面会是一个点,但是使用了setfacl(set file access control lists)后,点号就会变成加号.</p>
+<h3 id="简单的方法">简单的方法</h3>
+<p>远离这一切,可以直接关闭iptables和selinux,很明显很不安全 :)</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">systemctl mask firewalld</div><div class="line">systemctl <span class="keyword">stop</span> firewalld  <span class="comment">#关闭防火墙(centos7)</span></div><div class="line">iptables -<span class="literal">F</span>               <span class="comment">#暂时清除所有的规则</span></div><div class="line">service iptables <span class="keyword">stop</span>     <span class="comment">#关闭防火墙(centos6和otherlinux系统)</span></div><div class="line">setenforce <span class="number">0</span>              <span class="comment">#关闭selinux</span></div></pre></td></tr></table></figure>
+
+<p>如果你想从头学起，请看扩展阅读的第一个链接。<br>更详细的说明，请看我下面的笔记。</p>
+<hr>
+<h2 id="SELINUX_DETAIL">SELINUX DETAIL</h2>
+<p>selinux has two policy for targeted and stricted,CentOS apply targeted.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># selinux config file:/etc/sysconfig/selinux</span></div><div class="line">$ getenforce</div><div class="line">Enforcing/Permissive/Disabled</div><div class="line"></div><div class="line">$ sestatus</div><div class="line">SELinux status:                 enabled</div><div class="line">SELinuxfs mount:                /sys/fs/selinux</div><div class="line">SELinux root directory:         /etc/selinux</div><div class="line">Loaded policy name:             targeted</div><div class="line">Current mode:                   enforcing</div><div class="line">Mode from config file:          enforcing</div><div class="line">Policy MLS status:              enabled</div><div class="line">Policy deny_unknown status:     allowed</div><div class="line">Max kernel policy version:      <span class="number">28</span></div></pre></td></tr></table></figure>
+
+<p>注释：<br>MLS: Multi-LevelSecurity(MLS) and non-MLS</p>
+<p>常用命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">sestatus -v                 <span class="comment"># more detail</span></div><div class="line">sestatus -b                 <span class="comment"># display current system soft selinux status</span></div><div class="line">getsebool <span class="operator">-a</span> | grep httpd   <span class="comment"># same as sestatus -b</span></div><div class="line">semodule <span class="operator">-l</span>                 <span class="comment"># list all selinux module</span></div><div class="line">ls <span class="operator">-l</span> /etc/selinux/targeted/modules/active/modules/ <span class="comment"># same as semodule -l</span></div><div class="line"></div><div class="line"></div><div class="line">id                          <span class="comment">#show cur user context</span></div><div class="line">ls -Z/--context</div><div class="line">cp -Z/--context</div><div class="line">ps -Z/--context</div><div class="line">chcon -t etc_t test.txt</div><div class="line">setfiles</div><div class="line">restorecon</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># SELINUX=enforcing would disable sshd non-22 port access until:</span></div><div class="line">semanage port <span class="operator">-a</span> -t ssh_port_t -p tcp <span class="number">12345</span></div><div class="line"></div><div class="line"><span class="comment"># copy file from other where,can not open by browser</span></div><div class="line">restorecon -R -v /var/www/html</div><div class="line"></div><div class="line"><span class="comment"># check httpd_disable_trans, ftpd_anon_write</span></div><div class="line">getsebool ftpd_anon_write</div><div class="line">getsebool httpd_disable_trans</div><div class="line"><span class="comment"># httpd_disable_trans is off,we could open it by:</span></div><div class="line">setsebool httpd_disable_trans=<span class="number">1</span></div><div class="line"><span class="comment"># or just:</span></div><div class="line">setsebool httpd_disable_trans on</div></pre></td></tr></table></figure>
+
+<h1 id="Advance">Advance</h1>
+<h2 id="Basic">Basic</h2>
+<p>system_u:object_r:locale_t:s0</p>
+<ul>
+<li>Each Linux user account maps to an SELinux user</li>
+<li>the root user that owns the file is mapped to the system_u SELinux user. This mapping is done by the SELinux policy.</li>
+<li>In Linux, a user runs a process. This can be as simple as the user jo opening a document in the vi editor (it will be jo’s account running the vi process) or a service account running the httpd daemon. In the SELinux world, a process (a daemon or a running program) is called a subject.</li>
+<li>An object in SELinux is anything that can be acted upon. This can be a file, a directory, a port, a tcp socket, the cursor, or perhaps an X server. The actions that a subject can perform on an object are the subject’s permissions.</li>
+<li>third section,This is the part that defines what type the file or directory belongs to.</li>
+<li>The fourth part of the security context, s0, has to do with multilevel security or MLS. Basically this is another way of enforcing SELinux security policy, and this part shows the sensitivity of the resource (s0)</li>
+</ul>
+<p>SELinux Users are suffixed by “u”, roles are suffixed by “r” and types (for files) or domains (for processes) are suffixed by “_t”.</p>
+<h3 id="Permernet_store">Permernet store</h3>
+<p>chcon is a temporary measure, a file system relabel or running the restorecon command will revert the file back to its original context.<br>But if you don’t know the file’s correct context, how does the system know which context to apply when it runs restorecon?<br>Conveniently, SELinux “remembers” the context of every file or directory in the server. In CentOS 7, contexts of files already existing in the system are listed in the /etc/selinux/targeted/contexts/files/file_contexts file. It’s a large file and it lists every file type associated with every application supported by the Linux distribution. Contexts of new directories and files are recorded in the /etc/selinux/targeted/contexts/files/file_contexts.local file.</p>
+<h2 id="the_SELinux_domain">the SELinux domain</h2>
+<p>cat /etc/selinux/targeted/contexts/files/file_contexts</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&gt;[root@fly files]# ll -h</div><div class="line">total 1.7M</div><div class="line">-<span class="ruby">rw-r--r--. <span class="number">1</span> root root <span class="number">346</span>K <span class="constant">Dec</span> <span class="number">26</span> <span class="number">02</span><span class="symbol">:</span><span class="number">52</span> file_contexts</span></div><div class="line">-<span class="ruby">rw-------. <span class="number">1</span> root root <span class="number">1.3</span>M <span class="constant">Dec</span> <span class="number">26</span> <span class="number">02</span><span class="symbol">:</span><span class="number">52</span> file_contexts.bin</span></div><div class="line">-<span class="ruby">rw-r--r--. <span class="number">1</span> root root  <span class="number">13</span>K <span class="constant">Dec</span> <span class="number">26</span> <span class="number">02</span><span class="symbol">:</span><span class="number">52</span> file_contexts.homedirs</span></div><div class="line">-<span class="ruby">rw-------. <span class="number">1</span> root root  <span class="number">42</span>K <span class="constant">Dec</span> <span class="number">26</span> <span class="number">02</span><span class="symbol">:</span><span class="number">52</span> file_contexts.homedirs.bin</span></div><div class="line">-<span class="ruby">rw-r--r--. <span class="number">1</span> root root    <span class="number">0</span> <span class="constant">Dec</span> <span class="number">16</span> <span class="number">23</span><span class="symbol">:</span><span class="number">31</span> file_contexts.local</span></div><div class="line">-<span class="ruby">rw-------. <span class="number">1</span> root root   <span class="number">16</span> <span class="constant">Dec</span> <span class="number">26</span> <span class="number">02</span><span class="symbol">:</span><span class="number">52</span> file_contexts.local.bin</span></div><div class="line">-<span class="ruby">rw-r--r--. <span class="number">1</span> root root    <span class="number">0</span> <span class="constant">Dec</span> <span class="number">16</span> <span class="number">23</span><span class="symbol">:</span><span class="number">30</span> file_contexts.subs</span></div><div class="line">-<span class="ruby">rw-r--r--. <span class="number">1</span> root root  <span class="number">435</span> <span class="constant">Dec</span> <span class="number">16</span> <span class="number">23</span><span class="symbol">:</span><span class="number">30</span> file_contexts.subs_dist</span></div><div class="line">-<span class="ruby">rw-r--r--. <span class="number">1</span> root root  <span class="number">139</span> <span class="constant">Dec</span> <span class="number">16</span> <span class="number">23</span><span class="symbol">:</span><span class="number">30</span> media</span></div></pre></td></tr></table></figure>
+
+<h3 id="two-step_process">two-step process</h3>
+<p>semanage fcontext —add —type httpd_sys_content_t “/www(/.<em>)?”<br>semanage fcontext —add —type httpd_sys_content_t “/www/html(/.</em>)?”<br>tips:if show<br>semanage: command not found<br>you may install full selinux distribution</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install policycoreutils policycoreutils-python selinux-policy selinux-policy-targeted libselinux-utils setroubleshoot-server setools setools-console mcstrans</div></pre></td></tr></table></figure>
+
+<p>To make sure, we can check the file context database (note that we are using the file_contexts.local file):</p>
+<p>cat /etc/selinux/targeted/contexts/files/file_contexts.local<br>You should see the updated contexts:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># <span class="keyword">This</span> <span class="keyword">file</span> is auto-generated by libsemanage</div><div class="line"># <span class="keyword">Do</span> not edit directly.</div><div class="line"><span class="regexp">/www(/</span>.*)?    system_u:object_r:httpd_sys_content_t:s0</div><div class="line"><span class="regexp">/www/</span>html(<span class="regexp">/.*)?    system_u:object_r:httpd_sys_content_t:s0</span></div></pre></td></tr></table></figure>
+
+<p>Next, we will run the restorecon command. This will relabel the file or directory with what’s been recorded in the previous step:<br>There is a nifty tool called matchpathcon that can help troubleshoot context-related problems.<br>matchpathcon -V /www/html/index.html<br>/www/html/index.html has context unconfined_u:object_r:default_t:s0, should be system_u:object_r:httpd_sys_content_t:s0</p>
+<p>restorecon -Rv /www</p>
+<p>matchpathcon -V /www/html/index.html</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/www/html/index.html verified.</div></pre></td></tr></table></figure>
+
+<h2 id="Domain_Transition">Domain Transition</h2>
+<p>So far we have seen how processes access file system resources. We will now see how processes access other processes.</p>
+<p>This transition is not something the application or the user can control. This has been stipulated in the SELinux policy that loads into memory as the system boots. In a non-SELinux server a user can start a process by switching to a more powerful account (provided she or he has the right to do so). In SELinux, such access is controlled by pre-written policies. And that’s another reason SELinux is said to implement Mandatory Access Control.</p>
+<p>sesearch -s init_t -t ftpd_exec_t -c file -p execute -Ad<br>The result shows that processes within initt domain can read, get attribute, execute, and open files of ftpdexec_t context:</p>
+<p>Found 1 semantic av rules:<br>   allow init_t ftpd_exec_t : file { read getattr execute open } ;<br>Next, we check if the binary file is the entrypoint for the target domain ftpd_t:</p>
+<p>sesearch -s ftpd_t -t ftpd_exec_t -c file -p entrypoint -Ad<br>And indeed it is so:</p>
+<p>Found 1 semantic av rules:<br>   allow ftpd_t ftpd_exec_t : file { ioctl read getattr lock execute execute_no_trans entrypoint open } ;<br>And finally, the source domain initt needs to have permission to transition to the target domain ftpdt:</p>
+<p>sesearch -s init_t -t ftpd_t -c process -p transition -Ad<br>As we can see below, the source domain has that permission:</p>
+<p>Found 1 semantic av rules:<br>   allow init_t ftpd_t : process transition ;</p>
+<h3 id="the_SELinux_user">the SELinux user</h3>
+<p> Multi Category Security (MLS / MCS)<br>SELinux users are defined in the policy that’s loaded into memory at boot time, and there are only a few of these users.<br>When SELinux is enforced, each regular Linux user account is mapped to an SELinux user account. There can be multiple user accounts mapped to the same SELinux user. This mapping enables a regular account to inherit the permission of its SELinux counterpart.<br>to seee mapping<br>semanage login -l<br>system_u is a different class of user, meant for running processes or daemons.<br>to see what SELinux users are available in the system<br>semanage user -l</p>
+<p>So what this really means is that any Linux user that maps to the unconfined_u user will have the privileges to run any app that runs within the unconfined_t domain.<br>id -Z</p>
+<h2 id="Other">Other</h2>
+<p>restorecond - daemon that watches for file creation and then sets the default SELinux file context</p>
+<h4 id="Further_Reading:">Further Reading:</h4>
+<p><a href="https://www.digitalocean.com/community/tutorials/an-introduction-to-selinux-on-centos-7-part-2-files-and-processes" target="_blank" rel="external">intro selinux by DO</a><br><a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7-Beta/html/SELinux_Users_and_Administrators_Guide/chap-Security-Enhanced_Linux-Introduction.html" target="_blank" rel="external">redhat selinux offical</a><br><a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/pdf/Security-Enhanced_Linux/Red_Hat_Enterprise_Linux-6-Security-Enhanced_Linux-en-US.pdf" target="_blank" rel="external">redhat selinux offical pdf version</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="中文叙述">中文叙述</h2>
+<p>selinux就是一个强制访问控制系统(Security-Enhanced Linux),一般有两个策略,一个是NSA用的restrict,一个是普通linux的用的targed,下面默认说的都是targed的策略.</p>
+]]>
+    </summary>
+    
+      <category term="linux" scheme="http://vastiny.com/categories/linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[专有名词解释]]></title>
+    <link href="http://vastiny.com/2014/11/01/glossary/"/>
+    <id>http://vastiny.com/2014/11/01/glossary/</id>
+    <published>2014-11-01T13:24:00.000Z</published>
+    <updated>2014-10-31T10:28:35.000Z</updated>
+    <content type="html"><![CDATA[<p>洞穴寓言<br>    有一批人犹如囚徒，世代居住在一个洞穴之中，洞穴有条长长的通道通向外面，人们的脖子和脚被锁住不能环顾，只能面向洞壁。他们身后有一堆火在燃烧，火和囚徒之间有一些人拿着器物走动、火光将器物变动不居的影像投在囚徒前面的洞壁上。囚徒不能回头，不知道影像的原因，以为这些影子是“实在”，用不同的名字称呼它们并习惯了这种生活。当某一囚徒偶然挣脱枷锁回头看火时，发现以前所见是影像而非实物;当他继续努力，走出洞口时，眼睛受阳光刺激致使他什么也看不见，只是一片虚无。他不得不回到洞内，但也追悔莫及，他恨自己看清了一切，因为这给他带来了更多的痛苦。<br>柏拉图还告诉我们，回到此岸、回到洞内并不可怕，可怕的是当我们洞悉了洞外、认清了彼岸的虚无现实再回到洞内，回到此岸。洞外虚无;洞内负重，洞外是不辨方向的一片真空，洞内是不可自明的负重前行;……事实上，洞外、洞内尽管轻重各异，但都不可承受。吴艾的“深呼吸”系列形象地隐喻了这个深刻的寓言，他试图在诘问世人：我们到底应该走出洞穴，还是回到洞穴呢?</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>洞穴寓言<br>    有一批人犹如囚徒，世代居住在一个洞穴之中，洞穴有条长长的通道通向外面，人们的脖子和脚被锁住不能环顾，只能面向洞壁。他们身后有一堆火在燃烧，火和囚徒之间有一些人拿着器物走动、火光将器物变动不居的影像投在囚徒前面的洞壁上。囚徒不能回头，不知道影像的原因，]]>
+    </summary>
+    
+      <category term="relax" scheme="http://vastiny.com/tags/relax/"/>
+    
+      <category term="relax" scheme="http://vastiny.com/categories/relax/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[书签栏的妙用]]></title>
+    <link href="http://vastiny.com/2014/10/11/bookmark/"/>
+    <id>http://vastiny.com/2014/10/11/bookmark/</id>
+    <published>2014-10-11T13:24:00.000Z</published>
+    <updated>2015-02-02T16:07:44.000Z</updated>
+    <content type="html"><![CDATA[<p>我整理了一些我常常使用的标签在线工具<br>你可以复制javascript的字符串，新建一个标签，添加到收藏栏</p>
+<h3 id="Url2qr">Url2qr</h3>
+<p>自动转换当前页面为一个二维码，方便手机扫描访问。<br><a href="
+javascript:(function(){location.href="http://chart.lanbing.org/chart?&cht=qr&chld=|1&chs=240x240&chl="+location.href;})()
+" target="_blank" rel="external">url2qr</a></p>
+<h3 id="GetFlv">GetFlv</h3>
+<p>支持y2b和优酷等，比较少用。<br><a href="
+javascript:window.location.href=" http:="" flvgo.com="" download?url="+encodeURIComponent(location.href);
+" target="_blank" rel="external">GetFlv</a></p>
+<h3 id="WpFill">WpFill</h3>
+<p>自动填充wordpress的回复表单，以后就不用填用户名、邮箱和网址了。<br><a href="
+javascript:(function(){document.getElementById(" author').value="yantze" ;document.getelementbyid('email').value="yantze@126.com" ;document.getelementbyid('url').value="http://vastiny.com" ;document.getelementbyid("comment").focus();})()="" '="" target="_blank" rel="external">wpFill</a></p>
+<h3 id="Send_to_Kindle">Send to Kindle</h3>
+<p>可以直接去klip.me里面添加你自己的链接，自动发送到kindle<br><a href="http://www.klip.me/sendtokindle/" target="_blank" rel="external">klip.me</a></p>
+<h3 id="Gitignore-io">Gitignore.io</h3>
+<p>gernerate the gitignore file for special soft/language.<br>生成gitignore文件，比如输入xcode，自动添加各种build等要忽略的gitignore文件<br><a href="https://www.gitignore.io" target="_blank" rel="external">gitignore.io</a></p>
+<h3 id="WebProxy">WebProxy</h3>
+<p>tips:不要在里面去输入要帐号密码的网页<br><a href="http://dangdangmao.cc" target="_blank" rel="external">http://dangdangmao.cc</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>我整理了一些我常常使用的标签在线工具<br>你可以复制javascript的字符串，新建一个标签，添加到收藏栏</p>
+<h3 id="Url2qr">Url2qr</h3>
+<p>自动转换当前页面为一个二维码，方便手机扫描访问。<br><a href="
+javascri]]>
+    </summary>
+    
+      <category term="tools" scheme="http://vastiny.com/tags/tools/"/>
+    
+      <category term="tools" scheme="http://vastiny.com/categories/tools/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[WorkFlow]]></title>
+    <link href="http://vastiny.com/2014/08/26/workflow/"/>
+    <id>http://vastiny.com/2014/08/26/workflow/</id>
+    <published>2014-08-26T03:24:00.000Z</published>
+    <updated>2015-01-19T12:41:00.000Z</updated>
+    <content type="html"><![CDATA[<h1 id="windows工作环境">windows工作环境</h1>
+<p>这篇文章虽然是讲hyper-v的，但是里面很多其它想法或许对你有用</p>
+<h2 id="Hyper-v_+_CentOS">Hyper-v + CentOS</h2>
+<p>windows8集成Hyper-v，不可以和vitrulBox, VMware等其它虚拟机一起使用<br>启用hyper-v组件就可以使用，因为是系统本来就支持的，性能方面做得很不错<br>通过hyper-v安装CentOS6或者7，我试过很多linux发行版，我推荐使用centos<br>hyper-v原生支持powershell批量部署</p>
+<h2 id="应用场景">应用场景</h2>
+<p><strong>可以做什么</strong><br>windows:原生支持，高性能，有很好的兼容性<br>linux:运维，开发所有linux应用，快速搭建lnmp，docker等一系列工程，并且可以当作一个工作站，linux的界面都不用开启<br>集群:前段时间，就是用hyper-v开了三台centos做一个solr+nutch+hadoop集群，效果很不错</p>
+<p><strong>不可以</strong><br>图形处理，涉及到图形的内容都不擅长，当然也可以做，但是没有其它虚拟机做得好<br>linux图形界面不够流畅，图形延时很大<br>windows图形界面就很流畅<br>没有usb驱动和声卡驱动！</p>
+<h2 id="架构">架构</h2>
+<p><strong>hyper-v</strong><br>配置虚拟交换机三个，wlan(外网)、vlan(内部网)、wifi(无线网)<br>我把这三个网卡都加载到了centos，网段为 wlan:192.168.100.0/24 OR HDCP, vlan:192.168.137.0/24, wifi:DHCP<br>网卡的完美搭配<br>vlan的ip地址是微软默认的，如果我需要wifi的网络进入到vlan中，我可以直接在网络管理的属性里面设置共享给vlan，就可以应对很多场景<br>注意：如果vlan出现异常，即出现连不上192.168.137.1或者连上之后，不能上外网，检查net start sharedaccess是否开启。</p>
+<p><strong>windows MASTER的配置</strong><br>hosts:<br>因为常常ip会变，所以就直接在hosts文件里面配置一下，以后直接用域名就可以访问<br>192.168.137.131 wess<br>putty:<br>通过快捷方式E:\program\shortcut\putty.exe -i d:\Work\ssh\wess.ppk -P 22333 yantze@wess<br>实现无密码自动登录centos</p>
+<p><strong>centos</strong><br>zsh:<br>提供了很多实用的技巧<br>tmux:<br>实现一个putty可以开多个窗口，关闭putty，继续后台执行等强大的功能<br>vim:<br>如果你喜欢，就是一个强大的编辑器<br>samba:<br>windows和centos通过smb协议共享文档，可以通过这个实现IDE编程<br>samba在linux下面还是不容易配置的，可以参考我的这个配置,<a href="https://github.com/yantze/dotfiles/blob/master/misc/samba.smb.conf#L300" target="_blank" rel="external">链接</a><br>配置好后，执行testparm，测试smb是否正确配置<br>在登录的时候，用户名一定要在前面加’\’反斜杠<br>brew:<br>这里面居然也可以用brew安装最新的软件</p>
+<p>zsh，tmux，vim，samba是我在windows下的四剑客，运用得当，就可以说，windows是个好系统。<br>可以通过putty、tmux、vim与xserver通信，使得能<a href="http://www.cnblogs.com/vastiny/tag/route/" target="_blank" rel="external">linux与windows共享剪贴板(clipboard)</a></p>
+<h2 id="应用案例">应用案例</h2>
+<p><strong>路由</strong><br>多网卡环境不得不说路由的问题！<br>可以通过route / ip route 操作，我自己之前写过一些关于route的例子,<a href="http://www.cnblogs.com/vastiny/tag/route/" target="_blank" rel="external">链接</a></p>
+<p><strong>docker</strong><br>docker的操作官网都有，操作起来很简洁。<br>docker本来有一个观念，与vagrant不同就是，docker打算一个程序用一个container！这才能体现出它的简洁之美</p>
+<p><strong>lnmp</strong><br>这个就不用多说了，配置好就行了</p>
+<p>mac下的vagrant<br>mac下的vagrant类似windows下linux上的docker，效果还不错</p>
+<h2 id="windows">windows</h2>
+<p><strong>命令行</strong><br>现在使用autojump+cmd,简单就好<br>babun，也有很多的特性，接近linux console风格，软件构成：cmd+cygwin<br>cmder+autojump，有很多的特性，可能没有babun方便,结构：cmd+conmou+cmder+clink+msysgit+mingw</p>
+<h2 id="注">注</h2>
+<p>无论如何都凑不到两千字~<br>我现在开始想向mac转移，因为我的这种配置结构，在mac下面就是帮我搭配好了的，但是mac下面的浏览器都很差，界面也不美观<br>各用所长吧</p>
+<h2 id="屏幕截图">屏幕截图</h2>
+<p><img src="/image/putty_desktop.png" alt=""><br><img src="/image/putty_html.png" alt=""><br><img src="/image/babun.png" alt=""></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="windows工作环境">windows工作环境</h1>
+<p>这篇文章虽然是讲hyper-v的，但是里面很多其它想法或许对你有用</p>
+<h2 id="Hyper-v_+_CentOS">Hyper-v + CentOS</h2>
+<p>windows8集成]]>
+    </summary>
+    
+      <category term="tools" scheme="http://vastiny.com/categories/tools/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[算法之美]]></title>
+    <link href="http://vastiny.com/2014/08/15/interest_algorithm/"/>
+    <id>http://vastiny.com/2014/08/15/interest_algorithm/</id>
+    <published>2014-08-15T10:18:00.000Z</published>
+    <updated>2014-10-31T12:40:37.000Z</updated>
+    <content type="html"><![CDATA[<h3 id="第一题">第一题</h3>
+<p>一个专杀矮人的巨人让10个矮人从低到高排列，每个矮人能看见前面所有比他矮的人。巨人随机把白色或者黑色帽子放在每个矮人头上。矮人看不到自己的帽子。巨人告诉矮人，他将要求每个矮人回答帽子的颜色，从最高的开始。如果谁答错了就杀掉谁。每个矮人都能听见前一个人的回答，但是听不见被杀的声音。该用什么方法才能保证矮人被杀的数量最少，至少能挽救几个人的生命？<br>粗略答案:<a href="http://zhidao.baidu.com/question/582794545409870245.html" target="_blank" rel="external">link</a></p>
+<p>+2014-06-30 17:25</p>
+<h3 id="第二题">第二题</h3>
+<p>王师傅是卖鞋的，一双鞋进价 20 元卖 30 元，顾客来买鞋给了张 50 的，王师傅没有零钱，于是找邻居换了 50 元零钱。<br>事后邻居发现钱是假的，王师傅又赔了邻居 50 元。<br>请问：王师傅一共损失了多少钱？<br>详细答案:<a href="http://justjavac.com/other/2013/08/11/how-much-money-has-wang-lost.html" target="_blank" rel="external">link</a></p>
+<p>+2014-07-20 10:22</p>
+<h3 id="第三题">第三题</h3>
+<p>假设有三扇门，其中一扇门后面有奖，还有一个主持人，主持人知道哪扇门后面有奖。<br>你先随机选择一扇门，然后主持人会帮你打开另外两扇门中的一扇，可以确定的是，打开的这扇门肯定没有奖品。<br>现在，你有一个改变主意的机会，即在剩下的两扇门中，你可以坚持选择你本来选中的这扇门，也可以改变主意选择另外的一扇门。<br>问：你改变主意和不改变主意，中奖的概率分别是多少？<br>详细答案:<a href="http://www.v2ex.com/t/90960#reply47" target="_blank" rel="external">link</a><br>进阶:<a href="http://www.v2ex.com/t/71793" target="_blank" rel="external">link</a></p>
+<p>+2014-08-16 18:18:00</p>
+<h3 id="第四“题”">第四“题”</h3>
+<p>因为是译言网的翻译，所以直接贴它的文章网址吧<br>这篇文章很不错，总共有十二个问题，都讲得很容易懂，三门的问题这里有最好的解答。<br><a href="http://select.yeeyan.org/view/AhyuChen/357495" target="_blank" rel="external">最具争议的12个数学事实</a></p>
+<p><code>changelog:</code><br>write: 2014-06-11 21:24<br>add forth questiong: 2014-08-13 22:57</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h3 id="第一题">第一题</h3>
+<p>一个专杀矮人的巨人让10个矮人从低到高排列，每个矮人能看见前面所有比他矮的人。巨人随机把白色或者黑色帽子放在每个矮人头上。矮人看不到自己的帽子。巨人告诉矮人，他将要求每个矮人回答帽子的颜色，从最高的开始。如果谁答错了就杀掉谁。每个]]>
+    </summary>
+    
+      <category term="algorithm" scheme="http://vastiny.com/tags/algorithm/"/>
+    
+      <category term="lts" scheme="http://vastiny.com/tags/lts/"/>
+    
+      <category term="relax" scheme="http://vastiny.com/categories/relax/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Yaf和Requirejs]]></title>
+    <link href="http://vastiny.com/2014/06/25/yafandrequirejs/"/>
+    <id>http://vastiny.com/2014/06/25/yafandrequirejs/</id>
+    <published>2014-06-25T13:24:46.000Z</published>
+    <updated>2015-01-12T18:43:50.000Z</updated>
+    <content type="html"><![CDATA[<p>yaf简介<br>Yaf有着和Zend Framework相似的API, 相似的理念, 而同时又保持着对Bingo的兼容, 以此来提高开发效率, 规范开发习惯. 本着对性能的追求, Yaf把框架中不易变的部分抽象出来,采用PHP扩展实现(c语言),以此来保证性能.在作者自己做的简单测试中, Yaf和原生的PHP在同样功能下, 性能损失小于10%, 而和Zend Framework的对比中, Yaf的性能是Zend Framework的50-60倍.它提供了Bootstrap, 路由, 分发, 视图, 插件, 是一个全功能的PHP框架。</p>
+<p>requirejs简介<br>RequireJS是一个Javascript 文件和模块框架，不仅仅用于加载模块依赖和相关的命令，RequireJS帮助我们写出模块化的JavaScript代码，这非常有利于代码的可扩展性和重用性。 并且在一般的webapp很多人都在使用这种模块化的开发方式，国内有一个很好的模块化框架是sea.js，很受好评。</p>
+<p>项目简介：<br>放在了github上，<a href="https://github.com/yantze/yaf" target="_blank" rel="external">https://github.com/yantze/yaf</a><br>项目demo在 <a href="http://cartbyyaf.sinaapp.com" target="_blank" rel="external">http://cartbyyaf.sinaapp.com</a></p>
+<p>架构图<br>编写举例<br>性能评测</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>yaf简介<br>Yaf有着和Zend Framework相似的API, 相似的理念, 而同时又保持着对Bingo的兼容, 以此来提高开发效率, 规范开发习惯. 本着对性能的追求, Yaf把框架中不易变的部分抽象出来,采用PHP扩展实现(c语言),以此来保证性能.在作者自己]]>
+    </summary>
+    
+      <category term="tools" scheme="http://vastiny.com/categories/tools/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Vim]]></title>
+    <link href="http://vastiny.com/2014/06/17/vim/"/>
+    <id>http://vastiny.com/2014/06/17/vim/</id>
+    <published>2014-06-17T13:24:00.000Z</published>
+    <updated>2014-11-26T15:11:52.000Z</updated>
+    <content type="html"><![CDATA[<p>Vim 是个神奇的编辑器，不论编辑哪种语言的代码，总能找到一些插件来提升编码体验。就算是用了挺久的 Vim，也时不时地会听到别人说起一些自己从没用过但是很实用的技巧。会怀念 Sublime Text  功能强大却又容易上手的设计理念。但是从没有一种理由让我换用其它编辑器，因为总会有一个 Vim 插件能够填补你内心深处的不满足。<br>我的使用原则就是，能用就用，如果有更好的IDE就使用IDE，不要走火入魔就行。<br>something else;</p>
+<p>最开始接触VIM的时候，听人说VIM很好，就用了一下VIM，看VIM简陋不堪，所以就搁置了几个月，后来看到了<a href="https://github.com/ruchee/vimrc" target="_blank" rel="external">Ruchee</a>的vim配置文档，他的配置简单容易部署，所以后来在几分钟就建好了一个漂亮的vim编辑器的时候，高效编辑，高度灵活，我就喜欢上了这款编辑器。<br>下面是我github上<a href="https://github.com/yantze/vimrc" target="_blank" rel="external">vim项目</a>的一部分说明</p>
+<h3 id="一些常用快捷键说明">一些常用快捷键说明</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">/xxx                    查找xxx字符串</div><div class="line">,ci                     注释选定行(自动识别文件类型后添加注释)</div><div class="line">,n/,p                   切换buffer的标签(因为vim的一个窗口里面有多个buffer)</div><div class="line"><span class="number">10</span>G                     数字<span class="number">10</span>和大写的<span class="constant">G</span>，跳到第十行</div><div class="line"></div><div class="line"><span class="symbol">:s/x/b</span>                  用<span class="string">"#"</span>注释当前行</div><div class="line"><span class="symbol">:</span><span class="number">2</span>,<span class="number">50</span>s/x/b              在<span class="number">2</span>~<span class="number">50</span>行替换x为b</div><div class="line"><span class="symbol">:</span>.,+<span class="number">3</span>s/x/b              在前行和当前行后面的三行，替换x为b</div><div class="line"><span class="symbol">:%s/x/b</span>                 在所有行替换x为b</div><div class="line"><span class="symbol">:set</span> notextmode         这个可以去掉^<span class="constant">M</span>这个符号</div><div class="line"><span class="symbol">:set</span> pastetoggle        可以解决在linux命令行复制内容的时候，内容被识别为vim操作和乱序缩进</div><div class="line"></div><div class="line">f                       查找当前行的字符</div><div class="line">gb                      go browser插件，光标下是url链接，用默认浏览器打开链接，如果是选中的字符串，浏览器搜索</div><div class="line">gf                      如果光标下是一个文件链接，则可以用vim自动打开这个文件</div><div class="line">gd                      找到光标下的标签定义</div><div class="line">[{                      跳回当前代码块起始的<span class="string">"{"</span></div><div class="line"><span class="constant">Ctrl</span>+<span class="constant">Tab</span>/<span class="constant">Ctrl</span>+<span class="constant">Shift</span>+<span class="constant">Tab</span> 切换vim标签</div><div class="line"><span class="constant">Ctrl</span>+w,v/h              在gvim下创建多窗口</div><div class="line"><span class="constant">Ctrl</span>+h/j/k/l            在gvim下切换多窗口</div></pre></td></tr></table></figure>
+
+<p>当你了解到了基本的使用方法后，你可以读看看我在.vimrc中的文档，里面有很多详细的技巧，熟悉后能和sublime和notepad++匹敌<br>当然_vimrc.bundles这个文件里面是需要加载的插件，里面有介绍每个插件是拿来干嘛的，也可以了解一下<br>我之前学习vim的时候，收集到的一些资料，这次重新复习了里面的内容，整理了一下发布了出来，就把它当成中级vim的入门手册吧，<a href="https://github.com/yantze/vimrc/blob/master/VIMdoc.md" target="_blank" rel="external">下载地址</a>。</p>
+<h3 id="Thanks">Thanks</h3>
+<p>这份vim配置的所以完成，会如此热爱vim，是看到了ruchee的vimrc的配置<br>其完善的配置让我感觉vim是如此的简单<br><a href="https://github.com/ruchee/vimrc" target="_blank" rel="external">ruchee</a></p>
+<p>我也参考了很多的vim配置:<br><a href="https://github.com/coderhwz/vimfiles" target="_blank" rel="external">vimfiles</a><br><a href="https://github.com/luin/dotfiles" target="_blank" rel="external">dotfiles</a><br><a href="https://github.com/rhyzx/vimrc" target="_blank" rel="external">vimrc</a></p>
+<p>前段时间找到了vim的集成配置，功很强大<br><a href="http://vim.spf13.com/" target="_blank" rel="external">The Ultimate Vim Distribution</a><br>初学教程<br><a href="http://learnvimscriptthehardway.stevelosh.com/" target="_blank" rel="external">Learn Vimscript the Hard Way</a><br><a href="http://www.cnbeta.com/articles/185694.htm" target="_blank" rel="external">为什么Vim使用HJKL键作为方向键</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>Vim 是个神奇的编辑器，不论编辑哪种语言的代码，总能找到一些插件来提升编码体验。就算是用了挺久的 Vim，也时不时地会听到别人说起一些自己从没用过但是很实用的技巧。会怀念 Sublime Text  功能强大却又容易上手的设计理念。但是从没有一种理由让我换用其它编辑器，因]]>
+    </summary>
+    
+      <category term="vim" scheme="http://vastiny.com/tags/vim/"/>
+    
+      <category term="tools" scheme="http://vastiny.com/categories/tools/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Git]]></title>
+    <link href="http://vastiny.com/2014/06/08/git/"/>
+    <id>http://vastiny.com/2014/06/08/git/</id>
+    <published>2014-06-08T01:24:00.000Z</published>
+    <updated>2014-12-10T14:11:26.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="目录">目录</h2>
+<ul>
+<li><p>简化工作流程</p>
+<ul>
+<li><a href="#normal_commit">常用提交流程</a></li>
+</ul>
+</li>
+<li><p>初始化</p>
+<ul>
+<li><a href="#init">初始化一个空库</a></li>
+<li><a href="#pull_exist">在本地新建了一个库，同步已经存在的库</a></li>
+</ul>
+</li>
+<li><p>分支</p>
+<ul>
+<li><a href="#branch">创建新的分支</a></li>
+<li><a href="#branch_manage">常用分支管理</a></li>
+<li><a href="#merge">合并分支</a></li>
+<li><a href="#branch_newpull">从远程拿下一个新的分支</a></li>
+</ul>
+</li>
+<li><p>标签</p>
+<ul>
+<li><a href="#tag">使用tag上线发布</a></li>
+<li><a href="#tag_submit">带tag的版本提交</a></li>
+</ul>
+</li>
+<li><p>回滚</p>
+<ul>
+<li><a href="#regret">常用后悔管理</a></li>
+<li><a href="#log">操作记录高级命令</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>Misc</p>
+<ul>
+<li><a href="#archive">把当前仓库生成压缩文档 - zip</a></li>
+<li><a href="#stash">bug修复，而当前的工作未完成 - stash</a></li>
+<li><a href="#ssl_nopwd">git添加ssh key实现无密码提交</a></li>
+<li><a href="#https_nopwd">git实现https方式无密码提交</a></li>
+<li><a href="#proxy">使用git的代理</a></li>
+<li><a href="#gc">优化git结构 - gc</a></li>
+<li><a href="#ignore">忽略指定文件</a></li>
+<li><a href="#alias">创建命令别名 - alias</a></li>
+<li><a href="#blame">查找一个文件中一行的作者</a></li>
+</ul>
+</li>
+<li><p>团队协作——标准工作流程</p>
+<ul>
+<li>基本流程</li>
+<li>常驻分支：master和develop</li>
+<li>临时分支： <a href="#feature">feature</a>,release,hotfix</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="正文">正文</h2>
+<h3 id="基本常识">基本常识</h3>
+<p>当对代码的修改完成并存盘后，你可以通过git status 命令查看当前工作目录下文件的状态。<br>工作目录中的文件状态共有四种：</p>
+<ol>
+<li>untracked 未纳入git版本管理的文件，git不会对他们进行版本控制。</li>
+<li>unmodified 上次已提交且未修改的文件，使用git status命令却没有在命令下方列出的文件，均处于这个状态。</li>
+<li>modifid 正在修改的文件，使用git commit命令不会提交。</li>
+<li>staged 准备提交的文件，使用git commit命令则会提交。</li>
+</ol>
+<p><a name="normal_commit"></a></p>
+<h3 id="常用提交流程">常用提交流程</h3>
+<p>add -&gt; commit -&gt; pull / push</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">add</span> filename <span class="comment">#提交所有 git add .</span></div><div class="line">git diff -cached <span class="comment">#查看要提交的文件</span></div><div class="line">git commit -m <span class="string">"the file description"</span>  <span class="comment">#这行只有在git add之后才效，因为是创建记录</span></div><div class="line"><span class="comment">#git commit 有一个简便的参数 -a,可以直接将处于modifid和staged两种状态的文件一次提交</span></div><div class="line"><span class="comment">#git commit -a -m "content description"</span></div><div class="line">git <span class="built_in">log</span> <span class="comment">#查看之前提交的记录</span></div><div class="line">git status <span class="comment">#查看当前项目下是否有未添加的文件</span></div></pre></td></tr></table></figure>
+
+<p><a name="branch"></a></p>
+<h3 id="创建branch分支">创建branch分支</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">git branch detail:Git鼓励大量使用分支</div><div class="line">查看分支：git branch</div><div class="line">创建分支：git branch <span class="property">name</span></div><div class="line">切换分支：git checkout <span class="property">name</span></div><div class="line">创建+切换分支：git checkout -b <span class="property">name</span></div><div class="line">合并某分支到当前分支：git merge <span class="property">name</span></div><div class="line">删除分支：git branch -d <span class="property">name</span></div></pre></td></tr></table></figure>
+
+<p><a name="branch_manage"></a></p>
+<h3 id="常用分支管理">常用分支管理</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">git branch project_branch_version [master]</div><div class="line">git tag <span class="number">1.0</span> project_branch_version  <span class="comment"># git tag 列表</span></div><div class="line">git checkout projectname <span class="comment">#切换project</span></div><div class="line">git rebase project_branch_version <span class="comment"># 把maste上的提交放到branch上，生成新的branch</span></div><div class="line">git merge project_branch_version <span class="comment">#同上</span></div><div class="line">git branch <span class="operator">-d</span> project_branch_version</div></pre></td></tr></table></figure>
+
+<p>至于merge和rebase的区别。假设这是目前的状态：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">      <span class="comment">C</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">D</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">E</span> <span class="comment">local</span></div><div class="line">     <span class="comment">/</span></div><div class="line"><span class="comment">A</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">B</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">F</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">G</span> <span class="comment">remote</span></div></pre></td></tr></table></figure>
+
+<p>merge之后是这样：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">      <span class="comment">C</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">D</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">E</span> <span class="comment">local</span></div><div class="line">     <span class="comment">/</span>         <span class="comment">\</span></div><div class="line"><span class="comment">A</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">B</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">F</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">G</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">H</span> <span class="comment">remote</span></div></pre></td></tr></table></figure>
+
+<p>而rebase之后是这样：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">              <span class="comment">C'</span><span class="literal">-</span><span class="literal">-</span><span class="comment">D'</span><span class="literal">-</span><span class="literal">-</span><span class="comment">E'</span> <span class="comment">local</span></div><div class="line">             <span class="comment">/</span></div><div class="line"><span class="comment">A</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">B</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">F</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">G</span> <span class="comment">remote</span></div></pre></td></tr></table></figure>
+
+<p>当然，他们的效果自然是一样的。</p>
+<p><a name="regret"></a></p>
+<h3 id="常用后悔管理">常用后悔管理</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">git checkout -- db.txt <span class="comment">#把下面的文件撤出缓冲，还原文件到最后一次提交</span></div><div class="line">git <span class="keyword">reset</span> HEAD db.txt <span class="comment">#如果执行了git add .要先执行这条的语句，再执行上面的语句</span></div><div class="line"></div><div class="line">git <span class="keyword">reset</span> --hard HEAD <span class="comment">#还原到指定的提交，文件也会变，如果之后忘了HEAD可以用下面命令</span></div><div class="line">git reflog <span class="comment">#查看所有分支 </span></div><div class="line"></div><div class="line">git branch newbranch v1.<span class="number">0</span>  <span class="comment">#tag v1.0 是之前建好了的</span></div><div class="line"></div><div class="line">如果找不到修改之前的分支可以用</div><div class="line">git reflog <span class="comment">#查看所有提交，包括删除的</span></div><div class="line">git branch -a <span class="comment">#查看所有分支，包括删除的</span></div></pre></td></tr></table></figure>
+
+<p><a name="log"></a></p>
+<h3 id="操作记录">操作记录</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">log</span> <span class="built_in">file</span></div><div class="line">git <span class="built_in">log</span> <span class="built_in">directory</span>/</div><div class="line">git <span class="built_in">log</span> -S<span class="string">'str'</span></div><div class="line">通过文件，目录，字符串来查找一次提交</div><div class="line">git <span class="built_in">log</span> -p 可以显示改了什么具体内容</div><div class="line">git <span class="built_in">log</span> <span class="comment">--stat 可以显示哪个文件改了</span></div><div class="line">git <span class="built_in">log</span> <span class="comment">--pretty=oneline 可以显示每次提交的注释，并且缩为一行</span></div><div class="line">git <span class="built_in">log</span> <span class="comment">--pretty=format:'%h was %an, %ar, message: %s' 自定义的日志输出</span></div><div class="line">git <span class="built_in">log</span> <span class="comment">--pretty=format:'%h : %s' --graph 图形日志输出</span></div><div class="line">git <span class="built_in">log</span> <span class="comment">--graph --pretty=oneline --abbrev-commit 同上，不过有颜色好看一些</span></div></pre></td></tr></table></figure>
+
+<p><a name="archive"></a></p>
+<h3 id="归档">归档</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git log <span class="variable">--pretty=</span>oneline <span class="comment">#把所有的历史记录整合成achieve</span></div><div class="line">git archive <span class="variable">--format=</span>zip <span class="variable">--prefix=</span>directory/ tagname &gt; archivefile.zip <span class="comment"># 生成压缩文档</span></div></pre></td></tr></table></figure>
+
+<p><a name="merge"></a></p>
+<h3 id="合并">合并</h3>
+<p>下面master是当前分支，dev是要被合并的分支</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">合并分支并提交不使用fast-forward：noff有合并记录，否则合并后完全没有<span class="operator"><span class="keyword">merge</span>迹象</span></div><div class="line">git <span class="keyword">merge</span> <span class="comment">--no-ff -m "merge with no-ff" dev</span></div><div class="line"></div><div class="line">git rebase #这个合并是重建另外一个分支所有提交并且每次提交都用<span class="keyword">merge</span>合并</div></pre></td></tr></table></figure>
+
+<p><a name="branch_newpull"></a></p>
+<h3 id="从远程拿下一个新的分支">从远程拿下一个新的分支</h3>
+<p>现在在线仓库里面有new_feature这个分支<br>我同步到本地的仓库<br>git pull origin new_feature:new_feature<br>一定不要用git pull origin new_feature<br>这样是把远程new_feature分支合并到本地仓库的当前分支</p>
+<p><a name="tag"></a></p>
+<h3 id="使用tag上线发布系统">使用tag上线发布系统</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">git tag v3  <span class="comment">#创建标签</span></div><div class="line">git <span class="keyword">push</span> origin v3 <span class="comment">#推送标签</span></div><div class="line">git checkout –b v3 v3 <span class="comment">#从标签里面创建分支并转向到分支</span></div><div class="line">git checkout v2 <span class="comment">#回滚直接到前一个tag</span></div></pre></td></tr></table></figure>
+
+<p><a name="tag_submit"></a></p>
+<h3 id="带tag的版本提交">带tag的版本提交</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">git log –oneline <span class="comment">#首先查看以前的commit</span></div><div class="line"></div><div class="line"><span class="comment">#假如有这样一个commit：8a5cbc2 updated readme</span></div><div class="line"><span class="comment">#这样为他添加tag</span></div><div class="line">git tag -a v1.<span class="number">1</span> <span class="number">8</span>a5cbc2</div><div class="line"></div><div class="line">git tag -d v1.<span class="number">0</span> <span class="comment">#删除tag</span></div><div class="line">git push origin –tags <span class="comment">#同时推送tags</span></div><div class="line">git push origin --tags <span class="comment">#可以推送全部未推送过的本地标签</span></div><div class="line">git push origin tagname <span class="comment">#可以推送一个本地标签</span></div><div class="line">git push origin <span class="symbol">:refs/tags/tagname</span> <span class="comment">#可以删除一个远程标签</span></div></pre></td></tr></table></figure>
+
+<p><a name="stash"></a></p>
+<h3 id="bug修复，而当前的工作未完成">bug修复，而当前的工作未完成</h3>
+<p>修复bug时，我们会通过创建新的bug分支进行修复，然后合并，最后删除；<br>当手头工作没有完成时，先把工作现场git stash一下，这样可以保存当前的状态，并且滚回到最后一次提交<br>然后去修复bug，修复后，再git stash pop，回到工作现场。</p>
+<p><a name="feature"></a></p>
+<h3 id="开发新的feature">开发新的feature</h3>
+<p>开发一个新feature，最好新建一个分支；<br>如果要丢弃一个没有被合并过的分支，可以通过git branch -D name强行删除。</p>
+<p><a name="init"></a></p>
+<h3 id="初始化一个空库">初始化一个空库</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">git init</div><div class="line">git <span class="operator"><span class="keyword">commit</span> -a -m <span class="string">"explain the the commit content"</span> #这里包含了git <span class="keyword">add</span> . 和git <span class="keyword">commit</span></span></div><div class="line">git remote <span class="keyword">add</span> origin <span class="keyword">master</span> <span class="string">"ssh/https"</span> #<span class="keyword">add</span> origin改成remove origin可以删除远程库链接</div><div class="line">git push -u origin <span class="keyword">master</span> #推送<span class="keyword">master</span>到远程，并且建立连接，下次只要git push即可，origin是远程库的名字，<span class="keyword">master</span>是分支</div></pre></td></tr></table></figure>
+
+<p><a name="submodule"></a></p>
+<h3 id="Submodule">Submodule</h3>
+<p>Git Submodule可以把别人的git repo放到你目前git repo的任意位置。<br>然后可以更新repo然后还可以再pull</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git submodule <span class="built_in">add</span> http<span class="variable">s:</span>//github.<span class="keyword">com</span>/yantze/yaf.git yafdir</div></pre></td></tr></table></figure>
+
+<p>在clone一个项目的时候包含这个git submodule需要使用下面的命令才能下载</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git submodule init</div><div class="line">git submodule <span class="keyword">update</span></div></pre></td></tr></table></figure>
+
+<p>注意，如果之前有自己克隆相同的库，先删除之前的同名库，然后提交后再添加submodule</p>
+<p><a name="gc"></a><br>git gc 优化git<br>git每次add都是添加变化，查找的时候是在package的基础之上，用gc优化后，就可以加快查找速度</p>
+<p><a name="pull_exist"></a><br>如果远程已经有了内容，先pull<br>git pull #如果本地库是新创建的，会自动生成branch master<br>提示说git pull 要放到那个branch<br>git pull origin master</p>
+<p><a name="ignore"></a><br>git忽略特定文件<br><a href="http://blog.csdn.net/benkaoya/article/details/7932370" target="_blank" rel="external">http://blog.csdn.net/benkaoya/article/details/7932370</a></p>
+<p><a name="alias"></a><br>git 创建别名<br>git config —global alias.lg “log —color —graph —pretty=format:’%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset’ —abbrev-commit”</p>
+<p>可以参考我的别名配置文档<br><a href="https://github.com/yantze/dotfiles/blob/master/git/_gitconfig#L5" target="_blank" rel="external">gitconfig</a></p>
+<p><a name="blame"></a><br>查看checkfilename文件中每一行的代码是谁写的<br>git blame checkfilename</p>
+<p><a name="ssl_nopwd"></a></p>
+<h3 id="git添加ssh_key实现无密码提交">git添加ssh key实现无密码提交</h3>
+<p>puttygen.exe<br>ssh-keygen<br>教程：<a href="https://help.github.com/articles/generating-ssh-keys" target="_blank" rel="external">https://help.github.com/articles/generating-ssh-keys</a><br>error1:<br>[root@testcentos01 ~]# ssh-add<br>Could not open a connection to your authentication agent<br>在shell下执行<br>ssh-agent bash —login -i<br>然后再执行ssh-add就ok了</p>
+<p><a name="https_nopwd"></a></p>
+<h3 id="git实现https方式无密码提交">git实现https方式无密码提交</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">设置记住密码（默认<span class="number">15</span>分钟）：</div><div class="line">git config <span class="comment">--global credential.helper cache</span></div><div class="line"></div><div class="line">如果想自己设置时间，可以这样做：</div><div class="line">git config credential.helper <span class="string">'cache --timeout=3600'</span></div><div class="line">这样就设置一个小时之后失效</div><div class="line"></div><div class="line">长期存储密码：</div><div class="line">git config <span class="comment">--global credential.helper store</span></div><div class="line"></div><div class="line">增加远程地址的时候带上密码也是可以的(推荐)</div><div class="line"><span class="keyword">https</span>://yourname:password@git.oschina.net/name/project.git</div><div class="line"></div><div class="line">同时如果只是想某个项目可以自动提交，也可以在.git文件夹下config中设置</div><div class="line"></div><div class="line">如果你正在使用ssh而且想体验<span class="keyword">https</span>带来的高速，那么你可以这样做： 切换到项目目录下 ：</div><div class="line">cd projectfile/</div><div class="line">移除远程ssh方式的仓库地址</div><div class="line">git remote remove origin</div><div class="line"></div><div class="line">增加<span class="keyword">https</span>远程仓库地址</div><div class="line">git remote <span class="built_in">add</span> origin <span class="keyword">https</span>://yourname:password@git.oschina.net/name/project.git</div><div class="line"></div><div class="line">注意：<span class="keyword">https</span>存储密码的方法不是很安全</div><div class="line">因为用store方式存储，明文密码将存在与.gitconfig同目录下的.git-credentials文件中</div></pre></td></tr></table></figure>
+
+<p><a name="proxy"></a></p>
+<h3 id="使用git的代理">使用git的代理</h3>
+<p>由于在一些局域网的情况下，需要时用代理才能访问外网需要设置才能访问<br>下面的是http的代理，如果是ssl的代理由于比较复杂，可以去搜索引擎查找。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">git config --<span class="keyword">global</span> http.proxy http:<span class="comment">//172.31.195.32:8081</span></div><div class="line">git config --<span class="keyword">global</span> https.proxy http:<span class="comment">//172.31.195.32:8081</span></div><div class="line">git config --<span class="keyword">global</span> http.sslverify <span class="keyword">false</span></div><div class="line">git config --<span class="keyword">global</span> https.sslverify <span class="keyword">false</span></div><div class="line">git config --<span class="keyword">global</span> http.postBuffer <span class="number">24288000</span></div></pre></td></tr></table></figure>
+
+<p>你所有关于git的配置文件都在~/.gitconfig这个文件下。<br>可以参考我完整的配置<a href="https://github.com/yantze/dotfiles/blob/master/git/_gitconfig" target="_blank" rel="external">gitconfig</a></p>
+<h3 id="参考">参考</h3>
+<p>推荐一篇易懂的英文文章<br>A successful Git branching model<br><a href="http://nvie.com/posts/a-successful-git-branching-model/" target="_blank" rel="external">http://nvie.com/posts/a-successful-git-branching-model/</a></p>
+<p>git流程参考自:<br><a href="http://www.ruanyifeng.com/blog/2012/07/git.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2012/07/git.html</a><br><a href="https://ruby-china.org/topics/15737" target="_blank" rel="external">https://ruby-china.org/topics/15737</a></p>
+<p>git用https存储密码参考自:<br><a href="http://my.oschina.net/silentboy/blog/217766" target="_blank" rel="external">http://my.oschina.net/silentboy/blog/217766</a></p>
+<p>团队协作参考自:<br><a href="http://my.oschina.net/silentboy/blog/210094" target="_blank" rel="external">http://my.oschina.net/silentboy/blog/210094</a></p>
+<p>git代理参考自:<br><a href="http://ricksu.blog.163.com/blog/static/18906433820125294929508/" target="_blank" rel="external">http://ricksu.blog.163.com/blog/static/18906433820125294929508/</a><br><a href="http://blog.csdn.net/ijibu/article/details/10830853" target="_blank" rel="external">http://blog.csdn.net/ijibu/article/details/10830853</a></p>
+<p>git merge/rebase 字符图来自：<br><a href="http://blog.segmentfault.com/codecabin/1190000000593914" target="_blank" rel="external">http://blog.segmentfault.com/codecabin/1190000000593914</a></p>
+<p>git很多高级命令来自下面两本书:<br><a href="http://lvwzhen.gitbooks.io/git-tutorial/" target="_blank" rel="external">gitbook</a><br><a href="http://git.oschina.net/progit/" target="_blank" rel="external">git pro</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="目录">目录</h2>
+<ul>
+<li><p>简化工作流程</p>
+<ul>
+<li><a href="#normal_commit">常用提交流程</a></li>
+</ul>
+</li>
+<li><p>初始化</p>
+<ul>
+<li><a href="#i]]>
+    </summary>
+    
+      <category term="git" scheme="http://vastiny.com/tags/git/"/>
+    
+      <category term="lts" scheme="http://vastiny.com/tags/lts/"/>
+    
+      <category term="tools" scheme="http://vastiny.com/categories/tools/"/>
+    
+  </entry>
+  
+</feed>
