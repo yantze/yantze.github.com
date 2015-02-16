@@ -13,19 +13,14 @@ before_script:
 - git config --global user.email 'yantze@126.com'
 - git config --local remote.origin.url 'http://github.com/yantze/yantze.github.com'
 - git config --local remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+- git submodule update --init --recursive
 
 script:
 - hexo generate
 after_success:
-- mkdir .deploy
-- cd .deploy
-- ls
-- rm -rf ./*
 - cp -r ../public/* .
-- git init
 - git add -A .
 - git commit -m 'Site updated'
-- git branch -m gh-pages
 - git push -q -u origin gh-pages
 env:
   global:
