@@ -20,7 +20,7 @@ after_success:
 - cd .deploy
 - git add -A .
 - git commit -m 'Site updated'
-- git push
+- git push origin gh-pages
 env:
   global:
   - secure: AAAtOFeBLK4gRGVshxGzxpSeHs1eJ45jcg/kV2Uvyny/ffvw4/r61C1Zslezi2fT1kIbMuEBAD46PZmqXDTNnKqW9NFBQz4WAFyClUQ4YF/l4JmmgGzy3VZKHSk4q6zfm7D7nsffgN+Z94nZz4AE+pv0AD3VJ+U5iIvWoihcjds=
