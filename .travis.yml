@@ -18,6 +18,7 @@ before_script:
 script:
 - hexo generate
 after_success:
+- cd .deploy
 - cp -r ../public/* .
 - git add -A .
 - git commit -m 'Site updated'
