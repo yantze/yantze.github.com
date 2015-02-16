@@ -11,15 +11,18 @@ install:
 before_script:
 - git config --global user.name "yantze"
 - git config --global user.email 'yantze@126.com'
+- git config --local remote.origin.url 'http://github.com/yantze/yantze.github.com'
+- git config --local remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+
 script:
 - hexo generate
 after_success:
 - mkdir .deploy
 - cd .deploy
-- git clone --depth 1 --branch gh-pages --single-branch $DEPLOY_REPO . || (git init
-  && git remote add -t gh-pages origin $DEPLOY_REPO)
+- ls
 - rm -rf ./*
 - cp -r ../public/* .
+- git init
 - git add -A .
 - git commit -m 'Site updated'
 - git branch -m gh-pages
