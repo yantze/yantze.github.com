@@ -9,6 +9,7 @@ before_install:
 install:
 - npm install
 before_script:
+- git config --global push.default simple
 - git config --global user.name "yantze"
 - git config --global user.email 'yantze@126.com'
 - git submodule update --init --recursive
