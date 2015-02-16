@@ -1,4 +1,5 @@
-###blog
+###Blog
+[![Build Status](https://travis-ci.org/yantze/yantze.github.com.svg?branch=source)](https://travis-ci.org/yantze/yantze.github.com)
 
 use hexo
 
