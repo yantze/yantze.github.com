@@ -5,8 +5,6 @@ branches:
   only:
   - master
 before_install:
-- openssl aes-256-cbc -K $encrypted_5d48665a2195_key -iv $encrypted_5d48665a2195_iv
-  -in .travis/deploy_id_rsa.enc -out ~\/.ssh/id_rsa -d
 - npm install -g hexo
 install:
 - npm install
@@ -14,16 +12,19 @@ before_script:
 - git config --global user.name "yantze"
 - git config --global user.email 'yantze@126.com'
 - git clone git://github.com/joyceim/hexo-theme-mnmlpress.git themes/mnmlpress
-
 script:
 - hexo generate
 after_success:
 - mkdir .deploy
 - cd .deploy
-- git clone --depth 1 --branch gh-pages --single-branch $DEPLOY_REPO . || (git init && git remote add -t gh-pages origin $DEPLOY_REPO)
+- git clone --depth 1 --branch gh-pages --single-branch $DEPLOY_REPO . || (git init
+  && git remote add -t gh-pages origin $DEPLOY_REPO)
 - rm -rf ./*
 - cp -r ../public/* .
 - git add -A .
 - git commit -m 'Site updated'
 - git branch -m gh-pages
 - git push -q -u origin gh-pages
+env:
+  global:
+    secure: Aeta26PF+6bVXkZyiv1GIZS0L8eiTSTokZWLFVFNuWAXM8Ct/6/TdTgYEHYIrAvC+/CMelI2XtS6m1oaWdFZaHMl5jX94ABtqB34MrI5NYR30qPmDpzviAa4L7Jt6oJGXxQw2kGM365GbxKhTdaCIp853XTqvXZt3MLEH1SJp5M=
