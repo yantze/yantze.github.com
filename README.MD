@@ -1,7 +1,7 @@
 ###Blog
 [![Build Status](https://travis-ci.org/yantze/yantze.github.com.svg?branch=source)](https://travis-ci.org/yantze/yantze.github.com)
 
-use hexo
+power by hexo
 
 底部添加了删除广告的代码:
 ```javascript
