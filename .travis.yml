@@ -14,9 +14,8 @@ before_script:
 - git submodule update --init --recursive
 
 script:
-- cd .deploy
 - hexo generate
-- cd ..
+- ls -al
 after_success:
 - make deploy
 env:
