@@ -1,14 +1,17 @@
 language: node_js
 node_js:
-- 0.1
+  - 0.1
 branches:
   only:
   - source
 before_install:
-- npm install -g hexo
+  - npm install -g hexo
 install:
-- npm install
+  - npm install
 before_script:
+  - git config --global push.default simple
+  - git config --global user.name 'yantze'
+  - git config --global user.email 'yantze@126.com'
 script:
 - hexo generate
 after_success:
@@ -16,9 +19,6 @@ after_success:
   - "rm -r git_deploy/*"
   - "cp -r public/* git_deploy"
   - "cd git_deploy"
-  - "git config --global push.default simple"
-  - "git config --global user.name 'yantze'"
-  - "git config --global user.email 'yantze@126.com'"
   - "git add -A"
   - "git commit -m 'update'"
   - "git push -q"
