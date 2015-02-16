@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Git | Vastiny</title>
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="目录
+
+简化工作流程
+
+常用提交流程
+
+
+初始化
+
+初始化一个空库
+在本地新建了一个库，同步已经存在的库
+
+
+分支
+
+创建新的分支
+常用分支管理
+合并分支
+从远程拿下一个新的分支
+
+
+标签
+
+使用tag上线发布
+带tag的版本提交
+
+
+回滚
+
+常用后悔管理
+操作记录高级命令
+
+
+
+
+Misc
+
+把当前仓库生成压缩文档 - zip
+bug修复，而当前的工作未完成 - stash
+git添加ssh k">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git">
+<meta property="og:url" content="http://vastiny.com/2014/06/08/git/">
+<meta property="og:site_name" content="Vastiny">
+<meta property="og:description" content="目录
+
+简化工作流程
+
+常用提交流程
+
+
+初始化
+
+初始化一个空库
+在本地新建了一个库，同步已经存在的库
+
+
+分支
+
+创建新的分支
+常用分支管理
+合并分支
+从远程拿下一个新的分支
+
+
+标签
+
+使用tag上线发布
+带tag的版本提交
+
+
+回滚
+
+常用后悔管理
+操作记录高级命令
+
+
+
+
+Misc
+
+把当前仓库生成压缩文档 - zip
+bug修复，而当前的工作未完成 - stash
+git添加ssh k">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Git">
+<meta name="twitter:description" content="目录
+
+简化工作流程
+
+常用提交流程
+
+
+初始化
+
+初始化一个空库
+在本地新建了一个库，同步已经存在的库
+
+
+分支
+
+创建新的分支
+常用分支管理
+合并分支
+从远程拿下一个新的分支
+
+
+标签
+
+使用tag上线发布
+带tag的版本提交
+
+
+回滚
+
+常用后悔管理
+操作记录高级命令
+
+
+
+
+Misc
+
+把当前仓库生成压缩文档 - zip
+bug修复，而当前的工作未完成 - stash
+git添加ssh k">
+
+  
+    <link rel="alternative" href="http://feeds.feedburner.com/xxxxxly" title="Vastiny" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+  
+
+</head>
+<header id="header" class="inner">
+  <h1>
+    <a href="/" id="logo">Vastiny</a>
+  </h1>
+  
+</div>
+</header>
+<body>
+  <div id="content" class="inner">
+        <article id="post-git" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <time datetime="2014-06-08T09:24:00.000Z" itemprop="datePublished">6月 8 2014</time>
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+    <h3 itemprop="name">
+      <a class="article-title" href="/2014/06/08/git/">Git</a>
+    </h3>
+  
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="目录">目录</h2>
+<ul>
+<li><p>简化工作流程</p>
+<ul>
+<li><a href="#normal_commit">常用提交流程</a></li>
+</ul>
+</li>
+<li><p>初始化</p>
+<ul>
+<li><a href="#init">初始化一个空库</a></li>
+<li><a href="#pull_exist">在本地新建了一个库，同步已经存在的库</a></li>
+</ul>
+</li>
+<li><p>分支</p>
+<ul>
+<li><a href="#branch">创建新的分支</a></li>
+<li><a href="#branch_manage">常用分支管理</a></li>
+<li><a href="#merge">合并分支</a></li>
+<li><a href="#branch_newpull">从远程拿下一个新的分支</a></li>
+</ul>
+</li>
+<li><p>标签</p>
+<ul>
+<li><a href="#tag">使用tag上线发布</a></li>
+<li><a href="#tag_submit">带tag的版本提交</a></li>
+</ul>
+</li>
+<li><p>回滚</p>
+<ul>
+<li><a href="#regret">常用后悔管理</a></li>
+<li><a href="#log">操作记录高级命令</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>Misc</p>
+<ul>
+<li><a href="#archive">把当前仓库生成压缩文档 - zip</a></li>
+<li><a href="#stash">bug修复，而当前的工作未完成 - stash</a></li>
+<li><a href="#ssl_nopwd">git添加ssh key实现无密码提交</a></li>
+<li><a href="#https_nopwd">git实现https方式无密码提交</a></li>
+<li><a href="#proxy">使用git的代理</a></li>
+<li><a href="#gc">优化git结构 - gc</a></li>
+<li><a href="#ignore">忽略指定文件</a></li>
+<li><a href="#alias">创建命令别名 - alias</a></li>
+<li><a href="#blame">查找一个文件中一行的作者</a></li>
+</ul>
+</li>
+<li><p>团队协作——标准工作流程</p>
+<ul>
+<li>基本流程</li>
+<li>常驻分支：master和develop</li>
+<li>临时分支： <a href="#feature">feature</a>,release,hotfix</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="正文">正文</h2>
+<h3 id="基本常识">基本常识</h3>
+<p>当对代码的修改完成并存盘后，你可以通过git status 命令查看当前工作目录下文件的状态。<br>工作目录中的文件状态共有四种：</p>
+<ol>
+<li>untracked 未纳入git版本管理的文件，git不会对他们进行版本控制。</li>
+<li>unmodified 上次已提交且未修改的文件，使用git status命令却没有在命令下方列出的文件，均处于这个状态。</li>
+<li>modifid 正在修改的文件，使用git commit命令不会提交。</li>
+<li>staged 准备提交的文件，使用git commit命令则会提交。</li>
+</ol>
+<p><a name="normal_commit"></a></p>
+<h3 id="常用提交流程">常用提交流程</h3>
+<p>add -&gt; commit -&gt; pull / push</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">add</span> filename <span class="comment">#提交所有 git add .</span></div><div class="line">git diff -cached <span class="comment">#查看要提交的文件</span></div><div class="line">git commit -m <span class="string">"the file description"</span>  <span class="comment">#这行只有在git add之后才效，因为是创建记录</span></div><div class="line"><span class="comment">#git commit 有一个简便的参数 -a,可以直接将处于modifid和staged两种状态的文件一次提交</span></div><div class="line"><span class="comment">#git commit -a -m "content description"</span></div><div class="line">git <span class="built_in">log</span> <span class="comment">#查看之前提交的记录</span></div><div class="line">git status <span class="comment">#查看当前项目下是否有未添加的文件</span></div></pre></td></tr></table></figure>
+
+<p><a name="branch"></a></p>
+<h3 id="创建branch分支">创建branch分支</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">git branch detail:Git鼓励大量使用分支</div><div class="line">查看分支：git branch</div><div class="line">创建分支：git branch <span class="property">name</span></div><div class="line">切换分支：git checkout <span class="property">name</span></div><div class="line">创建+切换分支：git checkout -b <span class="property">name</span></div><div class="line">合并某分支到当前分支：git merge <span class="property">name</span></div><div class="line">删除分支：git branch -d <span class="property">name</span></div></pre></td></tr></table></figure>
+
+<p><a name="branch_manage"></a></p>
+<h3 id="常用分支管理">常用分支管理</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">git branch project_branch_version [master]</div><div class="line">git tag <span class="number">1.0</span> project_branch_version  <span class="comment"># git tag 列表</span></div><div class="line">git checkout projectname <span class="comment">#切换project</span></div><div class="line">git rebase project_branch_version <span class="comment"># 把maste上的提交放到branch上，生成新的branch</span></div><div class="line">git merge project_branch_version <span class="comment">#同上</span></div><div class="line">git branch <span class="operator">-d</span> project_branch_version</div></pre></td></tr></table></figure>
+
+<p>至于merge和rebase的区别。假设这是目前的状态：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">      <span class="comment">C</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">D</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">E</span> <span class="comment">local</span></div><div class="line">     <span class="comment">/</span></div><div class="line"><span class="comment">A</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">B</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">F</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">G</span> <span class="comment">remote</span></div></pre></td></tr></table></figure>
+
+<p>merge之后是这样：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">      <span class="comment">C</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">D</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">E</span> <span class="comment">local</span></div><div class="line">     <span class="comment">/</span>         <span class="comment">\</span></div><div class="line"><span class="comment">A</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">B</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">F</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">G</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">H</span> <span class="comment">remote</span></div></pre></td></tr></table></figure>
+
+<p>而rebase之后是这样：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">              <span class="comment">C'</span><span class="literal">-</span><span class="literal">-</span><span class="comment">D'</span><span class="literal">-</span><span class="literal">-</span><span class="comment">E'</span> <span class="comment">local</span></div><div class="line">             <span class="comment">/</span></div><div class="line"><span class="comment">A</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">B</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">F</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">G</span> <span class="comment">remote</span></div></pre></td></tr></table></figure>
+
+<p>当然，他们的效果自然是一样的。</p>
+<p><a name="regret"></a></p>
+<h3 id="常用后悔管理">常用后悔管理</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">git checkout -- db.txt <span class="comment">#把下面的文件撤出缓冲，还原文件到最后一次提交</span></div><div class="line">git <span class="keyword">reset</span> HEAD db.txt <span class="comment">#如果执行了git add .要先执行这条的语句，再执行上面的语句</span></div><div class="line"></div><div class="line">git <span class="keyword">reset</span> --hard HEAD <span class="comment">#还原到指定的提交，文件也会变，如果之后忘了HEAD可以用下面命令</span></div><div class="line">git reflog <span class="comment">#查看所有分支 </span></div><div class="line"></div><div class="line">git branch newbranch v1.<span class="number">0</span>  <span class="comment">#tag v1.0 是之前建好了的</span></div><div class="line"></div><div class="line">如果找不到修改之前的分支可以用</div><div class="line">git reflog <span class="comment">#查看所有提交，包括删除的</span></div><div class="line">git branch -a <span class="comment">#查看所有分支，包括删除的</span></div></pre></td></tr></table></figure>
+
+<p><a name="log"></a></p>
+<h3 id="操作记录">操作记录</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">log</span> <span class="built_in">file</span></div><div class="line">git <span class="built_in">log</span> <span class="built_in">directory</span>/</div><div class="line">git <span class="built_in">log</span> -S<span class="string">'str'</span></div><div class="line">通过文件，目录，字符串来查找一次提交</div><div class="line">git <span class="built_in">log</span> -p 可以显示改了什么具体内容</div><div class="line">git <span class="built_in">log</span> <span class="comment">--stat 可以显示哪个文件改了</span></div><div class="line">git <span class="built_in">log</span> <span class="comment">--pretty=oneline 可以显示每次提交的注释，并且缩为一行</span></div><div class="line">git <span class="built_in">log</span> <span class="comment">--pretty=format:'%h was %an, %ar, message: %s' 自定义的日志输出</span></div><div class="line">git <span class="built_in">log</span> <span class="comment">--pretty=format:'%h : %s' --graph 图形日志输出</span></div><div class="line">git <span class="built_in">log</span> <span class="comment">--graph --pretty=oneline --abbrev-commit 同上，不过有颜色好看一些</span></div></pre></td></tr></table></figure>
+
+<p><a name="archive"></a></p>
+<h3 id="归档">归档</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git log <span class="variable">--pretty=</span>oneline <span class="comment">#把所有的历史记录整合成achieve</span></div><div class="line">git archive <span class="variable">--format=</span>zip <span class="variable">--prefix=</span>directory/ tagname &gt; archivefile.zip <span class="comment"># 生成压缩文档</span></div></pre></td></tr></table></figure>
+
+<p><a name="merge"></a></p>
+<h3 id="合并">合并</h3>
+<p>下面master是当前分支，dev是要被合并的分支</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">合并分支并提交不使用fast-forward：noff有合并记录，否则合并后完全没有<span class="operator"><span class="keyword">merge</span>迹象</span></div><div class="line">git <span class="keyword">merge</span> <span class="comment">--no-ff -m "merge with no-ff" dev</span></div><div class="line"></div><div class="line">git rebase #这个合并是重建另外一个分支所有提交并且每次提交都用<span class="keyword">merge</span>合并</div></pre></td></tr></table></figure>
+
+<p><a name="branch_newpull"></a></p>
+<h3 id="从远程拿下一个新的分支">从远程拿下一个新的分支</h3>
+<p>现在在线仓库里面有new_feature这个分支<br>我同步到本地的仓库<br>git pull origin new_feature:new_feature<br>一定不要用git pull origin new_feature<br>这样是把远程new_feature分支合并到本地仓库的当前分支</p>
+<p><a name="tag"></a></p>
+<h3 id="使用tag上线发布系统">使用tag上线发布系统</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">git tag v3  <span class="comment">#创建标签</span></div><div class="line">git <span class="keyword">push</span> origin v3 <span class="comment">#推送标签</span></div><div class="line">git checkout –b v3 v3 <span class="comment">#从标签里面创建分支并转向到分支</span></div><div class="line">git checkout v2 <span class="comment">#回滚直接到前一个tag</span></div></pre></td></tr></table></figure>
+
+<p><a name="tag_submit"></a></p>
+<h3 id="带tag的版本提交">带tag的版本提交</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">git log –oneline <span class="comment">#首先查看以前的commit</span></div><div class="line"></div><div class="line"><span class="comment">#假如有这样一个commit：8a5cbc2 updated readme</span></div><div class="line"><span class="comment">#这样为他添加tag</span></div><div class="line">git tag -a v1.<span class="number">1</span> <span class="number">8</span>a5cbc2</div><div class="line"></div><div class="line">git tag -d v1.<span class="number">0</span> <span class="comment">#删除tag</span></div><div class="line">git push origin –tags <span class="comment">#同时推送tags</span></div><div class="line">git push origin --tags <span class="comment">#可以推送全部未推送过的本地标签</span></div><div class="line">git push origin tagname <span class="comment">#可以推送一个本地标签</span></div><div class="line">git push origin <span class="symbol">:refs/tags/tagname</span> <span class="comment">#可以删除一个远程标签</span></div></pre></td></tr></table></figure>
+
+<p><a name="stash"></a></p>
+<h3 id="bug修复，而当前的工作未完成">bug修复，而当前的工作未完成</h3>
+<p>修复bug时，我们会通过创建新的bug分支进行修复，然后合并，最后删除；<br>当手头工作没有完成时，先把工作现场git stash一下，这样可以保存当前的状态，并且滚回到最后一次提交<br>然后去修复bug，修复后，再git stash pop，回到工作现场。</p>
+<p><a name="feature"></a></p>
+<h3 id="开发新的feature">开发新的feature</h3>
+<p>开发一个新feature，最好新建一个分支；<br>如果要丢弃一个没有被合并过的分支，可以通过git branch -D name强行删除。</p>
+<p><a name="init"></a></p>
+<h3 id="初始化一个空库">初始化一个空库</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">git init</div><div class="line">git <span class="operator"><span class="keyword">commit</span> -a -m <span class="string">"explain the the commit content"</span> #这里包含了git <span class="keyword">add</span> . 和git <span class="keyword">commit</span></span></div><div class="line">git remote <span class="keyword">add</span> origin <span class="keyword">master</span> <span class="string">"ssh/https"</span> #<span class="keyword">add</span> origin改成remove origin可以删除远程库链接</div><div class="line">git push -u origin <span class="keyword">master</span> #推送<span class="keyword">master</span>到远程，并且建立连接，下次只要git push即可，origin是远程库的名字，<span class="keyword">master</span>是分支</div></pre></td></tr></table></figure>
+
+<p><a name="submodule"></a></p>
+<h3 id="Submodule">Submodule</h3>
+<p>Git Submodule可以把别人的git repo放到你目前git repo的任意位置。<br>然后可以更新repo然后还可以再pull</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git submodule <span class="built_in">add</span> http<span class="variable">s:</span>//github.<span class="keyword">com</span>/yantze/yaf.git yafdir</div></pre></td></tr></table></figure>
+
+<p>在clone一个项目的时候包含这个git submodule需要使用下面的命令才能下载</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git submodule init</div><div class="line">git submodule <span class="keyword">update</span></div></pre></td></tr></table></figure>
+
+<p>注意，如果之前有自己克隆相同的库，先删除之前的同名库，然后提交后再添加submodule</p>
+<p><a name="gc"></a><br>git gc 优化git<br>git每次add都是添加变化，查找的时候是在package的基础之上，用gc优化后，就可以加快查找速度</p>
+<p><a name="pull_exist"></a><br>如果远程已经有了内容，先pull<br>git pull #如果本地库是新创建的，会自动生成branch master<br>提示说git pull 要放到那个branch<br>git pull origin master</p>
+<p><a name="ignore"></a><br>git忽略特定文件<br><a href="http://blog.csdn.net/benkaoya/article/details/7932370" target="_blank" rel="external">http://blog.csdn.net/benkaoya/article/details/7932370</a></p>
+<p><a name="alias"></a><br>git 创建别名<br>git config —global alias.lg “log —color —graph —pretty=format:’%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset’ —abbrev-commit”</p>
+<p>可以参考我的别名配置文档<br><a href="https://github.com/yantze/dotfiles/blob/master/git/_gitconfig#L5" target="_blank" rel="external">gitconfig</a></p>
+<p><a name="blame"></a><br>查看checkfilename文件中每一行的代码是谁写的<br>git blame checkfilename</p>
+<p><a name="ssl_nopwd"></a></p>
+<h3 id="git添加ssh_key实现无密码提交">git添加ssh key实现无密码提交</h3>
+<p>puttygen.exe<br>ssh-keygen<br>教程：<a href="https://help.github.com/articles/generating-ssh-keys" target="_blank" rel="external">https://help.github.com/articles/generating-ssh-keys</a><br>error1:<br>[root@testcentos01 ~]# ssh-add<br>Could not open a connection to your authentication agent<br>在shell下执行<br>ssh-agent bash —login -i<br>然后再执行ssh-add就ok了</p>
+<p><a name="https_nopwd"></a></p>
+<h3 id="git实现https方式无密码提交">git实现https方式无密码提交</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">设置记住密码（默认<span class="number">15</span>分钟）：</div><div class="line">git config <span class="comment">--global credential.helper cache</span></div><div class="line"></div><div class="line">如果想自己设置时间，可以这样做：</div><div class="line">git config credential.helper <span class="string">'cache --timeout=3600'</span></div><div class="line">这样就设置一个小时之后失效</div><div class="line"></div><div class="line">长期存储密码：</div><div class="line">git config <span class="comment">--global credential.helper store</span></div><div class="line"></div><div class="line">增加远程地址的时候带上密码也是可以的(推荐)</div><div class="line"><span class="keyword">https</span>://yourname:password@git.oschina.net/name/project.git</div><div class="line"></div><div class="line">同时如果只是想某个项目可以自动提交，也可以在.git文件夹下config中设置</div><div class="line"></div><div class="line">如果你正在使用ssh而且想体验<span class="keyword">https</span>带来的高速，那么你可以这样做： 切换到项目目录下 ：</div><div class="line">cd projectfile/</div><div class="line">移除远程ssh方式的仓库地址</div><div class="line">git remote remove origin</div><div class="line"></div><div class="line">增加<span class="keyword">https</span>远程仓库地址</div><div class="line">git remote <span class="built_in">add</span> origin <span class="keyword">https</span>://yourname:password@git.oschina.net/name/project.git</div><div class="line"></div><div class="line">注意：<span class="keyword">https</span>存储密码的方法不是很安全</div><div class="line">因为用store方式存储，明文密码将存在与.gitconfig同目录下的.git-credentials文件中</div></pre></td></tr></table></figure>
+
+<p><a name="proxy"></a></p>
+<h3 id="使用git的代理">使用git的代理</h3>
+<p>由于在一些局域网的情况下，需要时用代理才能访问外网需要设置才能访问<br>下面的是http的代理，如果是ssl的代理由于比较复杂，可以去搜索引擎查找。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">git config --<span class="keyword">global</span> http.proxy http:<span class="comment">//172.31.195.32:8081</span></div><div class="line">git config --<span class="keyword">global</span> https.proxy http:<span class="comment">//172.31.195.32:8081</span></div><div class="line">git config --<span class="keyword">global</span> http.sslverify <span class="keyword">false</span></div><div class="line">git config --<span class="keyword">global</span> https.sslverify <span class="keyword">false</span></div><div class="line">git config --<span class="keyword">global</span> http.postBuffer <span class="number">24288000</span></div></pre></td></tr></table></figure>
+
+<p>你所有关于git的配置文件都在~/.gitconfig这个文件下。<br>可以参考我完整的配置<a href="https://github.com/yantze/dotfiles/blob/master/git/_gitconfig" target="_blank" rel="external">gitconfig</a></p>
+<h3 id="参考">参考</h3>
+<p>推荐一篇易懂的英文文章<br>A successful Git branching model<br><a href="http://nvie.com/posts/a-successful-git-branching-model/" target="_blank" rel="external">http://nvie.com/posts/a-successful-git-branching-model/</a></p>
+<p>git流程参考自:<br><a href="http://www.ruanyifeng.com/blog/2012/07/git.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2012/07/git.html</a><br><a href="https://ruby-china.org/topics/15737" target="_blank" rel="external">https://ruby-china.org/topics/15737</a></p>
+<p>git用https存储密码参考自:<br><a href="http://my.oschina.net/silentboy/blog/217766" target="_blank" rel="external">http://my.oschina.net/silentboy/blog/217766</a></p>
+<p>团队协作参考自:<br><a href="http://my.oschina.net/silentboy/blog/210094" target="_blank" rel="external">http://my.oschina.net/silentboy/blog/210094</a></p>
+<p>git代理参考自:<br><a href="http://ricksu.blog.163.com/blog/static/18906433820125294929508/" target="_blank" rel="external">http://ricksu.blog.163.com/blog/static/18906433820125294929508/</a><br><a href="http://blog.csdn.net/ijibu/article/details/10830853" target="_blank" rel="external">http://blog.csdn.net/ijibu/article/details/10830853</a></p>
+<p>git merge/rebase 字符图来自：<br><a href="http://blog.segmentfault.com/codecabin/1190000000593914" target="_blank" rel="external">http://blog.segmentfault.com/codecabin/1190000000593914</a></p>
+<p>git很多高级命令来自下面两本书:<br><a href="http://lvwzhen.gitbooks.io/git-tutorial/" target="_blank" rel="external">gitbook</a><br><a href="http://git.oschina.net/progit/" target="_blank" rel="external">git pro</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a href="http://vastiny.com/2014/06/08/git/#disqus_thread" class="article-comment-link">Comments</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/lts/">lts</a></li></ul>
+
+    </footer>
+  </div>
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+        <hr class="footer-line">
+  </div>
+<footer id="footer" class="inner">
+  <div id="footer-info">
+    &copy; 2015 yantze<br>
+     <a href="https://github.com/tcnksm/mnmlpress">mnmlpress</a> // Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+  </div>
+</footer>
+
+<script>
+  var disqus_shortname = 'vastiny';
+  
+  var disqus_url = 'http://vastiny.com/2014/06/08/git/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+</body>
+</html>

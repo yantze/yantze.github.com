@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Vim | Vastiny</title>
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="Vim 是个神奇的编辑器，不论编辑哪种语言的代码，总能找到一些插件来提升编码体验。就算是用了挺久的 Vim，也时不时地会听到别人说起一些自己从没用过但是很实用的技巧。会怀念 Sublime Text  功能强大却又容易上手的设计理念。但是从没有一种理由让我换用其它编辑器，因为总会有一个 Vim 插件能够填补你内心深处的不满足。我的使用原则就是，能用就用，如果有更好的IDE就使用IDE，不要走火入魔">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vim">
+<meta property="og:url" content="http://vastiny.com/2014/06/17/vim/">
+<meta property="og:site_name" content="Vastiny">
+<meta property="og:description" content="Vim 是个神奇的编辑器，不论编辑哪种语言的代码，总能找到一些插件来提升编码体验。就算是用了挺久的 Vim，也时不时地会听到别人说起一些自己从没用过但是很实用的技巧。会怀念 Sublime Text  功能强大却又容易上手的设计理念。但是从没有一种理由让我换用其它编辑器，因为总会有一个 Vim 插件能够填补你内心深处的不满足。我的使用原则就是，能用就用，如果有更好的IDE就使用IDE，不要走火入魔">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vim">
+<meta name="twitter:description" content="Vim 是个神奇的编辑器，不论编辑哪种语言的代码，总能找到一些插件来提升编码体验。就算是用了挺久的 Vim，也时不时地会听到别人说起一些自己从没用过但是很实用的技巧。会怀念 Sublime Text  功能强大却又容易上手的设计理念。但是从没有一种理由让我换用其它编辑器，因为总会有一个 Vim 插件能够填补你内心深处的不满足。我的使用原则就是，能用就用，如果有更好的IDE就使用IDE，不要走火入魔">
+
+  
+    <link rel="alternative" href="http://feeds.feedburner.com/xxxxxly" title="Vastiny" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+  
+
+</head>
+<header id="header" class="inner">
+  <h1>
+    <a href="/" id="logo">Vastiny</a>
+  </h1>
+  
+</div>
+</header>
+<body>
+  <div id="content" class="inner">
+        <article id="post-vim" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <time datetime="2014-06-17T21:24:00.000Z" itemprop="datePublished">6月 17 2014</time>
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+    <h3 itemprop="name">
+      <a class="article-title" href="/2014/06/17/vim/">Vim</a>
+    </h3>
+  
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Vim 是个神奇的编辑器，不论编辑哪种语言的代码，总能找到一些插件来提升编码体验。就算是用了挺久的 Vim，也时不时地会听到别人说起一些自己从没用过但是很实用的技巧。会怀念 Sublime Text  功能强大却又容易上手的设计理念。但是从没有一种理由让我换用其它编辑器，因为总会有一个 Vim 插件能够填补你内心深处的不满足。<br>我的使用原则就是，能用就用，如果有更好的IDE就使用IDE，不要走火入魔就行。<br>something else;</p>
+<p>最开始接触VIM的时候，听人说VIM很好，就用了一下VIM，看VIM简陋不堪，所以就搁置了几个月，后来看到了<a href="https://github.com/ruchee/vimrc" target="_blank" rel="external">Ruchee</a>的vim配置文档，他的配置简单容易部署，所以后来在几分钟就建好了一个漂亮的vim编辑器的时候，高效编辑，高度灵活，我就喜欢上了这款编辑器。<br>下面是我github上<a href="https://github.com/yantze/vimrc" target="_blank" rel="external">vim项目</a>的一部分说明</p>
+<h3 id="一些常用快捷键说明">一些常用快捷键说明</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">/xxx                    查找xxx字符串</div><div class="line">,ci                     注释选定行(自动识别文件类型后添加注释)</div><div class="line">,n/,p                   切换buffer的标签(因为vim的一个窗口里面有多个buffer)</div><div class="line"><span class="number">10</span>G                     数字<span class="number">10</span>和大写的<span class="constant">G</span>，跳到第十行</div><div class="line"></div><div class="line"><span class="symbol">:s/x/b</span>                  用<span class="string">"#"</span>注释当前行</div><div class="line"><span class="symbol">:</span><span class="number">2</span>,<span class="number">50</span>s/x/b              在<span class="number">2</span>~<span class="number">50</span>行替换x为b</div><div class="line"><span class="symbol">:</span>.,+<span class="number">3</span>s/x/b              在前行和当前行后面的三行，替换x为b</div><div class="line"><span class="symbol">:%s/x/b</span>                 在所有行替换x为b</div><div class="line"><span class="symbol">:set</span> notextmode         这个可以去掉^<span class="constant">M</span>这个符号</div><div class="line"><span class="symbol">:set</span> pastetoggle        可以解决在linux命令行复制内容的时候，内容被识别为vim操作和乱序缩进</div><div class="line"></div><div class="line">f                       查找当前行的字符</div><div class="line">gb                      go browser插件，光标下是url链接，用默认浏览器打开链接，如果是选中的字符串，浏览器搜索</div><div class="line">gf                      如果光标下是一个文件链接，则可以用vim自动打开这个文件</div><div class="line">gd                      找到光标下的标签定义</div><div class="line">[{                      跳回当前代码块起始的<span class="string">"{"</span></div><div class="line"><span class="constant">Ctrl</span>+<span class="constant">Tab</span>/<span class="constant">Ctrl</span>+<span class="constant">Shift</span>+<span class="constant">Tab</span> 切换vim标签</div><div class="line"><span class="constant">Ctrl</span>+w,v/h              在gvim下创建多窗口</div><div class="line"><span class="constant">Ctrl</span>+h/j/k/l            在gvim下切换多窗口</div></pre></td></tr></table></figure>
+
+<p>当你了解到了基本的使用方法后，你可以读看看我在.vimrc中的文档，里面有很多详细的技巧，熟悉后能和sublime和notepad++匹敌<br>当然_vimrc.bundles这个文件里面是需要加载的插件，里面有介绍每个插件是拿来干嘛的，也可以了解一下<br>我之前学习vim的时候，收集到的一些资料，这次重新复习了里面的内容，整理了一下发布了出来，就把它当成中级vim的入门手册吧，<a href="https://github.com/yantze/vimrc/blob/master/VIMdoc.md" target="_blank" rel="external">下载地址</a>。</p>
+<h3 id="Thanks">Thanks</h3>
+<p>这份vim配置的所以完成，会如此热爱vim，是看到了ruchee的vimrc的配置<br>其完善的配置让我感觉vim是如此的简单<br><a href="https://github.com/ruchee/vimrc" target="_blank" rel="external">ruchee</a></p>
+<p>我也参考了很多的vim配置:<br><a href="https://github.com/coderhwz/vimfiles" target="_blank" rel="external">vimfiles</a><br><a href="https://github.com/luin/dotfiles" target="_blank" rel="external">dotfiles</a><br><a href="https://github.com/rhyzx/vimrc" target="_blank" rel="external">vimrc</a></p>
+<p>前段时间找到了vim的集成配置，功很强大<br><a href="http://vim.spf13.com/" target="_blank" rel="external">The Ultimate Vim Distribution</a><br>初学教程<br><a href="http://learnvimscriptthehardway.stevelosh.com/" target="_blank" rel="external">Learn Vimscript the Hard Way</a><br><a href="http://www.cnbeta.com/articles/185694.htm" target="_blank" rel="external">为什么Vim使用HJKL键作为方向键</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a href="http://vastiny.com/2014/06/17/vim/#disqus_thread" class="article-comment-link">Comments</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vim/">vim</a></li></ul>
+
+    </footer>
+  </div>
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+        <hr class="footer-line">
+  </div>
+<footer id="footer" class="inner">
+  <div id="footer-info">
+    &copy; 2015 yantze<br>
+     <a href="https://github.com/tcnksm/mnmlpress">mnmlpress</a> // Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+  </div>
+</footer>
+
+<script>
+  var disqus_shortname = 'vastiny';
+  
+  var disqus_url = 'http://vastiny.com/2014/06/17/vim/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+</body>
+</html>
