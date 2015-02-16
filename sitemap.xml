@@ -2,53 +2,53 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://vastiny.com/2014/06/08/about/</loc>
-    <lastmod>2015-02-16T19:50:16.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://vastiny.com/2014/10/11/bookmark/</loc>
-    <lastmod>2015-02-16T19:50:16.000Z</lastmod>
+    <lastmod>2015-02-16T20:03:41.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://vastiny.com/2014/06/08/git/</loc>
-    <lastmod>2015-02-16T19:50:16.000Z</lastmod>
+    <lastmod>2015-02-16T20:03:41.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://vastiny.com/2014/11/01/glossary/</loc>
-    <lastmod>2015-02-16T19:50:16.000Z</lastmod>
+    <lastmod>2015-02-16T20:03:41.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://vastiny.com/2014/08/15/interest_algorithm/</loc>
-    <lastmod>2015-02-16T19:50:16.000Z</lastmod>
+    <lastmod>2015-02-16T20:03:41.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://vastiny.com/2015/02/02/selinux/</loc>
-    <lastmod>2015-02-16T19:50:16.000Z</lastmod>
+    <lastmod>2015-02-16T20:03:41.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://vastiny.com/2014/06/17/vim/</loc>
-    <lastmod>2015-02-16T19:50:16.000Z</lastmod>
+    <lastmod>2015-02-16T20:03:41.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://vastiny.com/2014/08/26/workflow/</loc>
-    <lastmod>2015-02-16T19:50:16.000Z</lastmod>
+    <lastmod>2015-02-16T20:03:41.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://vastiny.com/2014/06/25/yafandrequirejs/</loc>
-    <lastmod>2015-02-16T19:50:16.000Z</lastmod>
+    <lastmod>2015-02-16T20:03:41.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://vastiny.com/2015/02/16/404/</loc>
-    <lastmod>2015-02-16T19:50:16.000Z</lastmod>
+    <loc>http://vastiny.com/404.html</loc>
+    <lastmod>2015-02-16T20:03:41.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://vastiny.com/about.html</loc>
+    <lastmod>2015-02-16T20:03:41.000Z</lastmod>
   </url>
   
 </urlset>
