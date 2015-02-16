@@ -16,16 +16,7 @@ before_script:
 script:
 - hexo generate
 after_success:
-- cd .deploy
-- cp -r ../public/* .
-- git add -A .
-- git commit -m 'Site updated'
-# - git push -q -u origin gh-pages
-- rm .travis.yml_
-- rm -rf .travis
-- ls -al
-# - git push -fq https://${DEPLOY_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git gh-pages
-- git push -fq https://${GH_TOKEN}@github.com/$(TRAVIS_REPO_SLUG).git gh-pages
+- make deploy
 env:
   global:
     secure: Aeta26PF+6bVXkZyiv1GIZS0L8eiTSTokZWLFVFNuWAXM8Ct/6/TdTgYEHYIrAvC+/CMelI2XtS6m1oaWdFZaHMl5jX94ABtqB34MrI5NYR30qPmDpzviAa4L7Jt6oJGXxQw2kGM365GbxKhTdaCIp853XTqvXZt3MLEH1SJp5M=
