@@ -11,7 +11,6 @@ install:
 before_script:
 - git config --global user.name "yantze"
 - git config --global user.email 'yantze@126.com'
-- git clone git://github.com/joyceim/hexo-theme-mnmlpress.git themes/mnmlpress
 script:
 - hexo generate
 after_success:

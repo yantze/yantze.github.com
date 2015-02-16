@@ -1,0 +1,3 @@
+[submodule "themes/mnmlpress"]
+	path = themes/mnmlpress
+	url = git://github.com/joyceim/hexo-theme-mnmlpress.git
