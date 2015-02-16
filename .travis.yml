@@ -15,9 +15,9 @@ before_script:
 
 script:
 - hexo generate
+- make deploy
 - ls -al
 after_success:
-- make deploy
 env:
   global:
     secure: Aeta26PF+6bVXkZyiv1GIZS0L8eiTSTokZWLFVFNuWAXM8Ct/6/TdTgYEHYIrAvC+/CMelI2XtS6m1oaWdFZaHMl5jX94ABtqB34MrI5NYR30qPmDpzviAa4L7Jt6oJGXxQw2kGM365GbxKhTdaCIp853XTqvXZt3MLEH1SJp5M=
