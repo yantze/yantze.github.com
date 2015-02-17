@@ -21,6 +21,8 @@ after_success:
   - "cp -r public/* git_deploy"
   - "cd git_deploy"
   - "echo 'language: node_js' > .travis.yml"
+  - "echo 'script' >> .travis.yml"
+  - "echo ' - echo hahah' >> .travis.yml"
   - "git add . -A"
   - "ls -al"
   - "git commit -m 'auto generate by travis-ci'"
