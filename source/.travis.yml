@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+  - 0.1
+branches:
+  only:
+  - source
+before_install:
+install:
+before_script:
+script:
+after_success:
