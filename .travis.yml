@@ -21,7 +21,8 @@ after_success:
   - "cp -r public/* git_deploy"
   - "cd git_deploy"
   - "git add . -A"
-  - "git commit -m 'update'"
+  - "ls -al"
+  - "git commit -m 'auto generate by travis-ci'"
   - "git push -q"
 env:
   global:
