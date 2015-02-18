@@ -23,6 +23,8 @@ after_success:
   - "echo 'language: node_js' > .travis.yml"
   - "echo 'script' >> .travis.yml"
   - "echo ' - echo hahah' >> .travis.yml"
+  - "cp ../themes/cusstom.css css/"
+  - echo '<link href="css/custom.css" media="all" rel="stylesheet" />' >> index.html
   - "git add . -A"
   - "ls -al"
   - "git commit -m 'auto generate by travis-ci'"
