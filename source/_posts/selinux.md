@@ -5,7 +5,7 @@ categories: linux
 ---
 
 ##中文叙述
-selinux就是一个强制访问控制系统(Security-Enhanced Linux),一般有两个策略,一个是NSA用的restrict,一个是普通linux的用的targed,下面默认说的都是targed的策略.
+selinux就是一个强制访问控制系统(Security-Enhanced Linux),一般有两个策略,一个是NSA用的restrict,一个是普通linux的用的targed,默认说的都是targed的策略.
  
 ###常用情况
 ####新装的apache服务器启动之后,只能本机访问,其它网络不能访问
