@@ -9,9 +9,14 @@ categories: tools
 
 ###Url2qr
 自动转换当前页面为一个二维码，方便手机扫描访问。
-<a href='
-javascript:(function(){location.href="http://chart.lanbing.org/chart?&cht=qr&chld=|1&chs=240x240&chl="+location.href;})()
+<a href="
+javascript:(function(){location.href='http://chart.lanbing.org/chart?&cht=qr&chld=|1&chs=240x240&chl="+location.href;})()
 '>url2qr</a>
+
+###定时关闭标签
+<a href="
+javascript:var str='';var f='location.href=location.search'; setTimeout(f, 1000*prompt('当前标签关闭时间(s)'));
+">定时关闭</a>
 
 ###GetFlv
 支持y2b和优酷等，比较少用。

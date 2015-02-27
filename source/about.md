@@ -1,7 +1,18 @@
 title: 无限的我
 date: 2014-06-08 11:32:00
 ---
-不管你在哪里，连上网，我就在你身边。
+//不管你在哪里，连上网，我就在你身边。
+
+我是杨志,22岁,喜欢通过自己写代码做想做的东西,和图像视觉处理.
+
+写过Yaf架构[网站](http://cartbyyaf.sinaapp.com/)
+做过快速保存片段的[网站](https://paste.sinaapp.com/)
+做过商业项目,无线网络认证
+两年运维
+两段编程工作经历.
+
+
+
 
 [life blog](http://life.vastiny.com)
 生活笔记，记录此时的思绪
@@ -10,10 +21,10 @@ date: 2014-06-08 11:32:00
 记录一些零碎的编程，简单，更新频繁
 
 [github](https://github.com/yantze)
-程序版本控制网站，vimrc，yaf，linux配置等
+程序版本控制网站，vimrc，yaf，linux配置项目等
 
 [album](http://life.vastiny.com/album)
-一些配图，拍照集
+一些配图，自拍照集
 
 [wood group](http://wood.vastiny.com)
 参加了UXDaward中国用户体验大赛时，我们小组的开会记录博客
@@ -24,7 +35,9 @@ date: 2014-06-08 11:32:00
 注释：
 标签中有#lts的意思是:Long-Term Support
 
-邮箱:yantze@126.com
+---
+yantze@126.com
+
 <script>
-console.log("%cVastiny","font-family:Arial; font-size:124px; font-weight:bold; color:#bada55; background:#222; -webkit-text-stroke:1px black;");
+console.log("%cVastiny","font-family:Arial; font-size:124px; font-weight:bold; color:#bada55; -webkit-text-stroke:1px black;");
 </script>
