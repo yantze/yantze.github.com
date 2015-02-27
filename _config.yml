@@ -92,6 +92,6 @@ plugins:
 ## Docs: http://hexo.io/docs/deployment.html
 deploy: 
   type: github
-  repository: https://github.com/yantze/yantze.github.com.git
-  branch: master
+  repository: https://gitcafe.com/yantze/yantze.git
+  branch: gitcafe-pages
 
