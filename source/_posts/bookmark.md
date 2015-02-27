@@ -4,11 +4,11 @@ tags: tools
 categories: tools
 ---
 
-我整理了一些我常常使用的标签在线工具
-你可以复制javascript的字符串，新建一个标签，添加到收藏栏
+我整理了一些常使用的在线工具
+拖拽到书签栏，需要使用的时，点击这个选项即可。
 
 ###url2qr
-自动转换当前页面为一个二维码，方便手机扫描访问。
+转换当前页面为一个二维码，方便手机扫描访问。
 <a class="bookmarklet" href="javascript: void(
 (function() {var element = document.createElement('script');url='http://chart.lanbing.org/chart?&cht=qr&chld=|1&chs=240x240&chl='+location.href;element.id = 'forward';element.charset = 'utf-8',element.innerText='location.href=url';document.body.appendChild(element);})()
 )">url2qr</a>
@@ -38,3 +38,6 @@ javascript:(function(){document.getElementById('author').value='yantze';document
 gernerate the gitignore file for special soft/language.
 生成gitignore文件，比如输入xcode，自动添加各种build等要忽略的gitignore文件
 [gitignore.io](https://www.gitignore.io)
+
+####tips
+有些浏览器可能放到标签栏后，不能正确显示名字，请手动修改。
