@@ -1,0 +1,3 @@
+[submodule "themes/simpleOct"]
+	path = themes/simpleOct
+	url = https://github.com/yantze/hexo-theme-mnmlpress

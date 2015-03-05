@@ -1,15 +1,14 @@
 title: 无限的我
 date: 2014-06-08 11:32:00
 ---
-//不管你在哪里，连上网，我就在你身边。
 
-我是杨志,22岁,喜欢通过自己写代码做想做的东西,和图像视觉处理.
+我是杨志,22岁
+喜欢通过自己写代码做想做的东西,和图像视觉处理.
 
-写过Yaf架构[网站](http://cartbyyaf.sinaapp.com/)
-做过快速保存片段的[网站](https://paste.sinaapp.com/)
-做过商业项目,无线网络认证
-两年运维
-两段编程工作经历.
+- 写过Yaf架构[网站](http://cartbyyaf.sinaapp.com/)(php)
+- 做过快速保存片段的[网站](https://paste.sinaapp.com/)(python)
+- 做过商业项目,无线网络认证,期间做了两年后台,两年运维,半年前端
+- 两段编程的工作经历.
 
 
 
@@ -37,6 +36,7 @@ date: 2014-06-08 11:32:00
 
 ---
 yantze@126.com
+不管你在哪里，连上网，我就在你身边。
 
 <script>
 console.log("%cVastiny","font-family:Arial; font-size:124px; font-weight:bold; color:#bada55; -webkit-text-stroke:1px black;");
