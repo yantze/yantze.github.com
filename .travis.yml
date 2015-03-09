@@ -16,6 +16,7 @@ before_script:
 script:
   - hexo generate
   - pwd
+  - git status
 after_success:
   - "mv public gitdeploy"
   - "cd gitdeploy"
