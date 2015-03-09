@@ -14,12 +14,13 @@ before_script:
   - git config --global user.email 'yantze@126.com'
   - git submodule update --init --recursive
 script:
-- hexo generate
+  - hexo generate
+  - pwd
 after_success:
-  - "git clone https://$GH_TOKEN@github.com/yantze/yantze.github.com.git gitdeploy"
-  - "rm -r gitdeploy/*"
-  - "cp -r public/* gitdeploy"
+  - "mv public gitdeploy"
   - "cd gitdeploy"
+  - "git init"
+  - "git remote add origin http://github.com/yantze/yantze.github.com"
   - "echo 'language: node_js' > .travis.yml"
   - "echo 'script' >> .travis.yml"
   - "echo ' - echo hahah' >> .travis.yml"
