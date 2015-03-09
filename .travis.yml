@@ -16,10 +16,10 @@ before_script:
 script:
 - hexo generate
 after_success:
-  - "git clone https://$GH_TOKEN@github.com/yantze/yantze.github.com.git git_deploy"
-  - "rm -r git_deploy/*"
-  - "cp -r public/* git_deploy"
-  - "cd git_deploy"
+  - "git clone https://$GH_TOKEN@github.com/yantze/yantze.github.com.git gitdeploy"
+  - "rm -r gitdeploy/*"
+  - "cp -r public/* gitdeploy"
+  - "cd gitdeploy"
   - "echo 'language: node_js' > .travis.yml"
   - "echo 'script' >> .travis.yml"
   - "echo ' - echo hahah' >> .travis.yml"

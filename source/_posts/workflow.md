@@ -31,7 +31,7 @@ wifi:DHCP
 vlan的ip地址是微软默认的，如果我需要wifi的网络进入到vlan中，我可以直接在网络管理的属性里面设置共享给vlan，就可以应对很多场景
 注意：如果vlan出现异常，即出现连不上192.168.137.1或者连上之后，不能上外网，在cmd中检查`net start sharedaccess`是否开启。
 
-**Windows Mmaster的配置**
+**Windows Master的配置**
 hosts:
 因为常常ip会变，所以就直接在hosts文件里面配置一下，以后直接用域名就可以访问
 192.168.137.131 wess
@@ -52,10 +52,10 @@ samba:
 windows和centos通过smb协议共享文档，可以通过这个实现IDE编程
 samba在linux下配置容易出错，可以参考我的这个配置,[链接](https://github.com/yantze/dotfiles/blob/master/misc/samba.smb.conf#L300)
 配置好后，执行testparm，测试smb是否正确配置
-在Windows资源管理器里面登录的时候，用户名一定要在前面加'\'反斜杠
+在Windows资源管理器里面登录的时候，用户名一定要在前面加'\'反斜杠,因为Windows用户名的格式是'域\用户名'
 
 brew:
-centOS居然也可以用brew安装最新的软件
+CentOS居然也可以用brew安装最新的软件
 
 windows与linux互连:
 putty、tmux、vim与xserver通信，使得[linux与windows共享剪贴板(clipboard)](http://www.cnblogs.com/vastiny/tag/route/)

@@ -3,7 +3,7 @@ date: 2014-06-08 11:32:00
 ---
 
 我是杨志,22岁
-喜欢通过自己写代码做想做的东西,和图像视觉处理.
+喜欢通过自己写代码做想做的东西和图像视觉处理.
 
 - 写过Yaf架构[网站](http://cartbyyaf.sinaapp.com/)(php)
 - 做过快速保存片段的[网站](https://paste.sinaapp.com/)(python)
