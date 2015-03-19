@@ -28,8 +28,13 @@ vlan:192.168.137.0/24
 wifi:DHCP
 ```
 网卡的完美搭配
-vlan的ip地址是微软默认的，如果我需要wifi的网络进入到vlan中，我可以直接在网络管理的属性里面设置共享给vlan，就可以应对很多场景
-注意：如果vlan出现异常，即出现连不上192.168.137.1或者连上之后，不能上外网，在cmd中检查`net start sharedaccess`是否开启。
+打开网络和共享中心,选择本地网络,属性,共享选项卡,选择共享给vlan这个网卡.
+wlan共享给vlan之后的ip地址默认为192.168.137.1
+
+vlan网卡出现几种异常
+vlan连不上网,但是支持DNS解析,用管理员cmd执行:`net start sharedaccess`
+如果还是不能使用这个功能,尝试打开本地网络的父网卡属性,因特网共享给vlan.
+
 
 **Windows Master的配置**
 hosts:
