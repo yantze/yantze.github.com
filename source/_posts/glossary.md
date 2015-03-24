@@ -4,6 +4,9 @@ tags: relax
 categories: relax
 ---
 
+墨菲定律(Murphy's law)
+Murphy's law is an adage or epigram that is typically stated as: Anything that can go wrong, will go wrong.
+
 本福特定律
 以一个城市的所有门牌号为例，有的街道门牌号可能在100多就结束了，有的在500多结束，有的在900多结束。注意到500多结束那条街一定包含了1、10+和100~199这些1开头的门牌号，而不包含9开头的百位数，只包含9及90+的以9开头的数，这样一来明显以1打头的就多于9打头的了。然后对整个城市的所有街道做一个综合，最终就满足本福特定律了。
 
