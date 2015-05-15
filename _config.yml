@@ -74,6 +74,6 @@ plugins:
 # Deployment
 ## Docs: http://hexo.io/docs/deployment.html
 deploy: 
-  type: github
+  type: git
   repository: https://gitcafe.com/yantze/yantze.git
   branch: gitcafe-pages
