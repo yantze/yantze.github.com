@@ -30,7 +30,7 @@ after_success:
   - "git add . -A"
   - "ls -al"
   - "git commit -m 'auto generate by travis-ci'"
-  - "git push -q"
+  - "git push master origin"
 env:
   global:
   - secure: AAAtOFeBLK4gRGVshxGzxpSeHs1eJ45jcg/kV2Uvyny/ffvw4/r61C1Zslezi2fT1kIbMuEBAD46PZmqXDTNnKqW9NFBQz4WAFyClUQ4YF/l4JmmgGzy3VZKHSk4q6zfm7D7nsffgN+Z94nZz4AE+pv0AD3VJ+U5iIvWoihcjds=
