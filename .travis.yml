@@ -32,8 +32,7 @@ after_success:
   - "git commit -m 'auto generate by travis-ci'"
   - "git branch"
   - "git remote -v"
-  - "git push upstream origin/master"
-  - "git push master origin"
+  - "git push --set-upstream origin master"
   - "git push -q"
 env:
   global:
