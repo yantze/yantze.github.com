@@ -3,7 +3,7 @@ date: 2014-06-08 11:32:00
 ---
 
 是杨志,93年生
-自己做得东西最有魅力,写代码做想做的东西是一件幸福的事情
+用代码做想做的作品是一件有魅力又幸福的事情
 
 - 写过Yaf架构[Demo](http://cartbyyaf.sinaapp.com/)(php)
 - 做过快速保存片段的[Demo](https://paste.sinaapp.com/)(python)
