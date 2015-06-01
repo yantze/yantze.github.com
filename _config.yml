@@ -56,7 +56,7 @@ time_format: HH:mm:ss
 
 # Pagination
 ## Set per_page to 0 to disable pagination
-per_page: 70
+per_page: 5
 pagination_dir: page
 
 # Disqus
@@ -65,7 +65,7 @@ disqus_shortname: vastiny
 # Extensions
 ## Plugins: http://hexo.io/plugins/
 ## Themes: http://hexo.io/themes/
-theme: simpleOct
+theme: apollo
 plugins:
 - hexo-generator-feed
 - hexo-generator-sitemap

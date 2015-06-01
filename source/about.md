@@ -35,6 +35,9 @@ date: 2014-06-08 11:32:00
 yantze@126.com
 不管你在哪里，连上网，我就在你身边。
 
+http://weibo.com/vastiny
+http://i.vastiny.com
+
 <script>
 console.log("%cVastiny","font-family:Arial; font-size:124px; font-weight:bold; color:#bada55; -webkit-text-stroke:1px black;");
 </script>
