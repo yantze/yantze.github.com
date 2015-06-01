@@ -10,55 +10,58 @@ selinux就是一个强制访问控制系统(Security-Enhanced Linux),一般有�
 ###常用情况
 ####新装的apache服务器启动之后,只能本机访问,其它网络不能访问
 这个是iptable或者centos7的firewall没有开放80端口.
-```bash
-iptables -A INPUT -p tcp --dport 80 -j ACCEPT
-service iptables save
-#or if centos7
-firewall-cmd --zone=dmz --add-port=80/tcp --permanent
-```
+
+if use iptables
+
+    iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+    service iptables save
+
+or firewall
+
+    firewall-cmd --zone=dmz --add-port=80/tcp --permanent
+
 网站可以访问后,但是页面是apache的引导页,不是网站目录下的内容.
 如果你在你的网站目录放的是从windows或者网络上拷贝下来的文件,很有可能selinux判断为httpd无权限读取这些文件,导致apache一直指向的是 /var/www/error/noindex.html或者/usr/share/httpd/noindex目录下的内容
-有两个解决方法,一个是设置selinux的等级,
-```bash
-# root权限才可以执行
-setenforce 0
-```
+有三个解决方法
+
+第一个是设置selinux的等级
+
+    setenforce 0
 
 第二个方法是
 
-给网站目录下的文件设置httpd_sys_content_t域
-```bash
-chcon -t default_t -R /var/www/html
-```
+    给网站目录下的文件设置httpd_sys_content_t域
+    chcon -t default_t -R /var/www/html
+
 第三个方法是
 
 如果你换了一个网站目录,或者想做成一个安装包,还想使用selinux,最好用这个方法.把规则添加给selinux.
-```bash
-semanage fcontext --add --type httpd_sys_content_t "/www(/.*)?"
-semanage fcontext --add --type httpd_sys_content_t "/www/html(/.*)?"
-```
+
+    semanage fcontext --add --type httpd_sys_content_t "/www(/.*)?"
+    semanage fcontext --add --type httpd_sys_content_t "/www/html(/.*)?"
+
 这个时候,应该有生成一个policy文件,里面包含了目录相关的权限设置
-```bash
-cat /etc/selinux/targeted/contexts/files/file_contexts.local
-```
+
+    cat /etc/selinux/targeted/contexts/files/file_contexts.local
+
 是时候用restorecon了
-```bash
-restorecon -Rv /www/html
-```
+
+    restorecon -Rv /www/html
+
 这个时候系统已经告诉你,已经转换成selinux认可的类型或者域了
 
 ####限制用户对自己文档的不可操作
 比如说我安排一个日志检查员,我不想让他执行程序,只是想让他看日志
-```bash
-sebool allow_guest_exec_content off
-```
+
+    sebool allow_guest_exec_content off
+
 这样,那些默认的账户都是不能执行脚本文件的了.
 
 ###一个有sudo权限的人,如何对他进行限制呢
 当然可以在visudo中有个列表显示这个用户的执行程序名,也可以用这种selinux限制好了规则的方法,这里的restricteduser就是一个拥有sudo权限的账户
-```bash
-semanage login -a -s user_u restricteduser
-```
+
+    semanage login -a -s user_u restricteduser
+
 这里说明一个就是user_u是user_r和user_t的合体,user_r代表的是可以执行哪些程序,user_t代表的是那些程序它有什么权限.
 比如说这个用户拥有启动httpd服务的权限,但是他对这个网站的内容确是不可编辑的.
 
@@ -71,13 +74,13 @@ selinux要的就是,user的权限是整个selinux系统中最小权限的存在.
 
 ###简单的方法
 远离这一切,可以直接关闭iptables和selinux,很明显很不安全 :)
-```
-systemctl mask firewalld
-systemctl stop firewalld  #关闭防火墙(centos7)
-iptables -F               #暂时清除所有的规则
-service iptables stop     #关闭防火墙(centos6和otherlinux系统)
-setenforce 0              #关闭selinux
-```
+
+    systemctl mask firewalld
+    systemctl stop firewalld  #关闭防火墙(centos7)
+    iptables -F               #暂时清除所有的规则
+    service iptables stop     #关闭防火墙(centos6和otherlinux系统)
+    setenforce 0              #关闭selinux
+
 
 如果你想从头学起，请看扩展阅读的第一个链接。
 更详细的说明，请看我下面的笔记。
@@ -86,59 +89,59 @@ setenforce 0              #关闭selinux
 ##SELINUX DETAIL
 selinux has two policy for targeted and stricted,CentOS apply targeted.
 
-```bash
-# selinux config file:/etc/sysconfig/selinux
-$ getenforce
-Enforcing/Permissive/Disabled
 
-$ sestatus
-SELinux status:                 enabled
-SELinuxfs mount:                /sys/fs/selinux
-SELinux root directory:         /etc/selinux
-Loaded policy name:             targeted
-Current mode:                   enforcing
-Mode from config file:          enforcing
-Policy MLS status:              enabled
-Policy deny_unknown status:     allowed
-Max kernel policy version:      28
-```
+    # selinux config file:/etc/sysconfig/selinux
+    $ getenforce
+    Enforcing/Permissive/Disabled
+
+    $ sestatus
+    SELinux status:                 enabled
+    SELinuxfs mount:                /sys/fs/selinux
+    SELinux root directory:         /etc/selinux
+    Loaded policy name:             targeted
+    Current mode:                   enforcing
+    Mode from config file:          enforcing
+    Policy MLS status:              enabled
+    Policy deny_unknown status:     allowed
+    Max kernel policy version:      28
+
 
 
 注释：
 MLS: Multi-LevelSecurity(MLS) and non-MLS
 
 常用命令：
-```bash
-sestatus -v                 # more detail
-sestatus -b                 # display current system soft selinux status
-getsebool -a | grep httpd   # same as sestatus -b
-semodule -l                 # list all selinux module
-ls -l /etc/selinux/targeted/modules/active/modules/ # same as semodule -l
+
+    sestatus -v                 # more detail
+    sestatus -b                 # display current system soft selinux status
+    getsebool -a | grep httpd   # same as sestatus -b
+    semodule -l                 # list all selinux module
+    ls -l /etc/selinux/targeted/modules/active/modules/ # same as semodule -l
 
 
-id                          #show cur user context
-ls -Z/--context
-cp -Z/--context
-ps -Z/--context
-chcon -t etc_t test.txt
-setfiles
-restorecon
+    id                          #show cur user context
+    ls -Z/--context
+    cp -Z/--context
+    ps -Z/--context
+    chcon -t etc_t test.txt
+    setfiles
+    restorecon
 
 
-# SELINUX=enforcing would disable sshd non-22 port access until:
-semanage port -a -t ssh_port_t -p tcp 12345
+    # SELINUX=enforcing would disable sshd non-22 port access until:
+    semanage port -a -t ssh_port_t -p tcp 12345
+    
+    # copy file from other where,can not open by browser
+    restorecon -R -v /var/www/html
+    
+    # check httpd_disable_trans, ftpd_anon_write
+    getsebool ftpd_anon_write
+    getsebool httpd_disable_trans
+    # httpd_disable_trans is off,we could open it by:
+    setsebool httpd_disable_trans=1
+    # or just:
+    setsebool httpd_disable_trans on
 
-# copy file from other where,can not open by browser
-restorecon -R -v /var/www/html
-
-# check httpd_disable_trans, ftpd_anon_write
-getsebool ftpd_anon_write
-getsebool httpd_disable_trans
-# httpd_disable_trans is off,we could open it by:
-setsebool httpd_disable_trans=1
-# or just:
-setsebool httpd_disable_trans on
-```
 
 
 #Advance
@@ -160,75 +163,78 @@ Conveniently, SELinux "remembers" the context of every file or directory in the 
 
 ##the SELinux domain
 
-cat /etc/selinux/targeted/contexts/files/file_contexts
+    cat /etc/selinux/targeted/contexts/files/file_contexts
 
-```
->[root@fly files]# ll -h
-total 1.7M
--rw-r--r--. 1 root root 346K Dec 26 02:52 file_contexts
--rw-------. 1 root root 1.3M Dec 26 02:52 file_contexts.bin
--rw-r--r--. 1 root root  13K Dec 26 02:52 file_contexts.homedirs
--rw-------. 1 root root  42K Dec 26 02:52 file_contexts.homedirs.bin
--rw-r--r--. 1 root root    0 Dec 16 23:31 file_contexts.local
--rw-------. 1 root root   16 Dec 26 02:52 file_contexts.local.bin
--rw-r--r--. 1 root root    0 Dec 16 23:30 file_contexts.subs
--rw-r--r--. 1 root root  435 Dec 16 23:30 file_contexts.subs_dist
--rw-r--r--. 1 root root  139 Dec 16 23:30 media
-```
+
+    >[root@fly files]# ll -h
+    total 1.7M
+    -rw-r--r--. 1 root root 346K Dec 26 02:52 file_contexts
+    -rw-------. 1 root root 1.3M Dec 26 02:52 file_contexts.bin
+    -rw-r--r--. 1 root root  13K Dec 26 02:52 file_contexts.homedirs
+    -rw-------. 1 root root  42K Dec 26 02:52 file_contexts.homedirs.bin
+    -rw-r--r--. 1 root root    0 Dec 16 23:31 file_contexts.local
+    -rw-------. 1 root root   16 Dec 26 02:52 file_contexts.local.bin
+    -rw-r--r--. 1 root root    0 Dec 16 23:30 file_contexts.subs
+    -rw-r--r--. 1 root root  435 Dec 16 23:30 file_contexts.subs_dist
+    -rw-r--r--. 1 root root  139 Dec 16 23:30 media
+
 
 ###two-step process
-semanage fcontext --add --type httpd_sys_content_t "/www(/.*)?"
-semanage fcontext --add --type httpd_sys_content_t "/www/html(/.*)?"
+
+    semanage fcontext --add --type httpd_sys_content_t "/www(/.*)?"
+    semanage fcontext --add --type httpd_sys_content_t "/www/html(/.*)?"
+
 tips:if show
-semanage: command not found
+
+    semanage: command not found
+
 you may install full selinux distribution
-```bash
-yum install policycoreutils policycoreutils-python selinux-policy selinux-policy-targeted libselinux-utils setroubleshoot-server setools setools-console mcstrans
-```
+
+    yum install policycoreutils policycoreutils-python selinux-policy selinux-policy-targeted libselinux-utils setroubleshoot-server setools setools-console mcstrans
+
 
 To make sure, we can check the file context database (note that we are using the file_contexts.local file):
 
-cat /etc/selinux/targeted/contexts/files/file_contexts.local
+    cat /etc/selinux/targeted/contexts/files/file_contexts.local
 You should see the updated contexts:
-```
-# This file is auto-generated by libsemanage
-# Do not edit directly.
-/www(/.*)?    system_u:object_r:httpd_sys_content_t:s0
-/www/html(/.*)?    system_u:object_r:httpd_sys_content_t:s0
-```
+
+    # This file is auto-generated by libsemanage
+    # Do not edit directly.
+    /www(/.*)?    system_u:object_r:httpd_sys_content_t:s0
+    /www/html(/.*)?    system_u:object_r:httpd_sys_content_t:s0
+
 
 Next, we will run the restorecon command. This will relabel the file or directory with what's been recorded in the previous step:
 There is a nifty tool called matchpathcon that can help troubleshoot context-related problems.
 matchpathcon -V /www/html/index.html
 /www/html/index.html has context unconfined_u:object_r:default_t:s0, should be system_u:object_r:httpd_sys_content_t:s0
 
-restorecon -Rv /www
+    restorecon -Rv /www
+    matchpathcon -V /www/html/index.html
 
-matchpathcon -V /www/html/index.html
-```
-/www/html/index.html verified.
-```
+    /www/html/index.html verified.
+
 
 ##Domain Transition
 So far we have seen how processes access file system resources. We will now see how processes access other processes.
 
 This transition is not something the application or the user can control. This has been stipulated in the SELinux policy that loads into memory as the system boots. In a non-SELinux server a user can start a process by switching to a more powerful account (provided she or he has the right to do so). In SELinux, such access is controlled by pre-written policies. And that's another reason SELinux is said to implement Mandatory Access Control.
 
-sesearch -s init_t -t ftpd_exec_t -c file -p execute -Ad
+    sesearch -s init_t -t ftpd_exec_t -c file -p execute -Ad
 The result shows that processes within initt domain can read, get attribute, execute, and open files of ftpdexec_t context:
 
 Found 1 semantic av rules:
    allow init_t ftpd_exec_t : file { read getattr execute open } ;
 Next, we check if the binary file is the entrypoint for the target domain ftpd_t:
 
-sesearch -s ftpd_t -t ftpd_exec_t -c file -p entrypoint -Ad
+    sesearch -s ftpd_t -t ftpd_exec_t -c file -p entrypoint -Ad
 And indeed it is so:
 
 Found 1 semantic av rules:
    allow ftpd_t ftpd_exec_t : file { ioctl read getattr lock execute execute_no_trans entrypoint open } ;
 And finally, the source domain initt needs to have permission to transition to the target domain ftpdt:
 
-sesearch -s init_t -t ftpd_t -c process -p transition -Ad
+    sesearch -s init_t -t ftpd_t -c process -p transition -Ad
 As we can see below, the source domain has that permission:
 
 Found 1 semantic av rules:
@@ -239,11 +245,12 @@ Found 1 semantic av rules:
 SELinux users are defined in the policy that's loaded into memory at boot time, and there are only a few of these users.
 When SELinux is enforced, each regular Linux user account is mapped to an SELinux user account. There can be multiple user accounts mapped to the same SELinux user. This mapping enables a regular account to inherit the permission of its SELinux counterpart.
 to seee mapping
-semanage login -l
+
+    semanage login -l
 system_u is a different class of user, meant for running processes or daemons.
 to see what SELinux users are available in the system
-semanage user -l
 
+    semanage user -l
 So what this really means is that any Linux user that maps to the unconfined_u user will have the privileges to run any app that runs within the unconfined_t domain.
 id -Z
 

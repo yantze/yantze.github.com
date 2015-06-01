@@ -3,6 +3,8 @@
 
 power by hexo
 
+theme by https://github.com/joyceim/hexo-theme-apollo
+
 底部添加了删除广告的代码:
 ```javascript
 document.getElementsByClassName("incap_page-tooltip")[0].innerHTML=''
