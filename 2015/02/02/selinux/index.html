@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>SELINUX | Vastiny</title>
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="中文叙述selinux就是一个强制访问控制系统(Security-Enhanced Linux),一般有两个策略,一个是NSA用的mls(restrict),一个是普通linux的用的targed,默认说的都是targed的策略.
+常用情况新装的apache服务器启动之后,只能本机访问,其它网络不能访问这个是iptable或者centos7的firewall没有开放80端口.
+if use ipt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SELINUX">
+<meta property="og:url" content="http://vastiny.com/2015/02/02/selinux/index.html">
+<meta property="og:site_name" content="Vastiny">
+<meta property="og:description" content="中文叙述selinux就是一个强制访问控制系统(Security-Enhanced Linux),一般有两个策略,一个是NSA用的mls(restrict),一个是普通linux的用的targed,默认说的都是targed的策略.
+常用情况新装的apache服务器启动之后,只能本机访问,其它网络不能访问这个是iptable或者centos7的firewall没有开放80端口.
+if use ipt">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SELINUX">
+<meta name="twitter:description" content="中文叙述selinux就是一个强制访问控制系统(Security-Enhanced Linux),一般有两个策略,一个是NSA用的mls(restrict),一个是普通linux的用的targed,默认说的都是targed的策略.
+常用情况新装的apache服务器启动之后,只能本机访问,其它网络不能访问这个是iptable或者centos7的firewall没有开放80端口.
+if use ipt">
+  
+    <link rel="alternative" href="/atom.xml" title="Vastiny" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-47857849-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</head>
+<body>
+  <div id="container">
+    <div class="mobile-nav-panel">
+	<i class="icon-reorder icon-large"></i>
+</div>
+<header id="header">
+	<h1 class="blog-title">
+		<a href="/">Vastiny</a>
+	</h1>
+	<nav class="nav">
+		<ul>
+			<li><a href="/archives">Archives</a></li><li><a href="/about.html">About</a></li>
+			<li><a id="nav-search-btn" class="nav-icon" title="Search"></a></li>
+			<li><a href="/atom.xml" id="nav-rss-link" class="nav-icon" title="RSS Feed"></a></li>
+		</ul>
+	</nav>
+	<div id="search-form-wrap">
+		<form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="q" value="site:http://vastiny.com"></form>
+	</div>
+</header>
+    <div id="main">
+      <article id="post-selinux" class="post">
+	<footer class="entry-meta-header">
+		<span class="meta-elements date">
+			<a href="/2015/02/02/selinux/" class="article-date">
+  <time datetime="2015-02-02T15:24:00.000Z" itemprop="datePublished">2015-02-02</time>
+</a>
+		</span>
+		<span class="meta-elements author">yantze</span>
+		<div class="commentscount">
+			
+				<a href="http://vastiny.com/2015/02/02/selinux/#disqus_thread" class="article-comment-link">Comments</a>
+			
+		</div>
+	</footer>
+	
+	<header class="entry-header">
+		
+  
+    <h1 class="article-title entry-title" itemprop="name">
+      SELINUX
+    </h1>
+  
+
+	</header>
+	<div class="entry-content">
+		
+    	<h2 id="中文叙述">中文叙述</h2><p>selinux就是一个强制访问控制系统(Security-Enhanced Linux),一般有两个策略,一个是NSA用的mls(restrict),一个是普通linux的用的targed,默认说的都是targed的策略.</p>
+<h3 id="常用情况">常用情况</h3><h4 id="新装的apache服务器启动之后,只能本机访问,其它网络不能访问">新装的apache服务器启动之后,只能本机访问,其它网络不能访问</h4><p>这个是iptable或者centos7的firewall没有开放80端口.</p>
+<p>if use iptables</p>
+<pre><code>iptables -A <span class="keyword">INPUT</span> -p tcp --dport 80 -j ACCEPT
+service iptables <span class="keyword">save</span>
+</code></pre><p>or firewall</p>
+<pre><code><span class="comment">firewall</span><span class="literal">-</span><span class="comment">cmd</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">zone=dmz</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">add</span><span class="literal">-</span><span class="comment">port=80/tcp</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">permanent</span>
+</code></pre><p>网站可以访问后,但是页面是apache的引导页,不是网站目录下的内容.<br>如果你在你的网站目录放的是从windows或者网络上拷贝下来的文件,很有可能selinux判断为httpd无权限读取这些文件,导致apache一直指向的是 /var/www/error/noindex.html或者/usr/share/httpd/noindex目录下的内容<br>有三个解决方法</p>
+<p>第一个是设置selinux的等级</p>
+<pre><code><span class="title">setenforce</span> <span class="number">0</span>
+</code></pre><p>第二个方法是</p>
+<pre><code>给网站目录下的文件设置httpd_sys_content_t域
+chcon -t default_t -R /<span class="keyword">var</span>/www/html
+</code></pre><p>第三个方法是</p>
+<p>如果你换了一个网站目录,或者想做成一个安装包,还想使用selinux,最好用这个方法.把规则添加给selinux.</p>
+<pre><code>semanage fcontext --<span class="built_in">add</span> --<span class="built_in">type</span> httpd_sys_content_t <span class="string">"/www(/.*)?"</span>
+semanage fcontext --<span class="built_in">add</span> --<span class="built_in">type</span> httpd_sys_content_t <span class="string">"/www/html(/.*)?"</span>
+</code></pre><p>这个时候,应该有生成一个policy文件,里面包含了目录相关的权限设置</p>
+<pre><code>cat <span class="regexp">/etc/</span>selinux<span class="regexp">/targeted/</span>contexts<span class="regexp">/files/</span>file_contexts.local
+</code></pre><p>是时候用restorecon了</p>
+<pre><code>restorecon -Rv <span class="regexp">/www/</span>html
+</code></pre><p>这个时候系统已经告诉你,已经转换成selinux认可的类型或者域了</p>
+<h4 id="限制用户对自己文档的不可操作">限制用户对自己文档的不可操作</h4><p>比如说我安排一个日志检查员,我不想让他执行程序,只是想让他看日志</p>
+<pre><code><span class="title">sebool</span> allow_guest_exec_content <span class="built_in">off</span>
+</code></pre><p>这样,那些默认的账户都是不能执行脚本文件的了.</p>
+<h3 id="一个有sudo权限的人,如何对他进行限制呢">一个有sudo权限的人,如何对他进行限制呢</h3><p>当然可以在visudo中有个列表显示这个用户的执行程序名,也可以用这种selinux限制好了规则的方法,这里的restricteduser就是一个拥有sudo权限的账户</p>
+<pre><code>semanage login <span class="operator">-a</span> <span class="operator">-s</span> user_u restricteduser
+</code></pre><p>这里说明一个就是user_u是user_r和user_t的合体,user_r代表的是可以执行哪些程序,user_t代表的是那些程序它有什么权限.<br>比如说这个用户拥有启动httpd服务的权限,但是他对这个网站的内容确是不可编辑的.</p>
+<h3 id="简明运作">简明运作</h3><p>selinux是构建在linux系统权限控制之上的一套系统,linux权限控制明显的一个问题就是,只分user/group/other,这个other有很多不同的用户,如果other的权限过大,会导致很多的问题出现.<br>selinux要的就是,user的权限是整个selinux系统中最小权限的存在.selinux也有一个天生缺陷,就是总有一个GOD可以操控一切.<br>在redhat系的文件系统中,文件属性后面有个小点或者加号,这个就是selinux和acl的设置:<br>当文件或者文件夹只使用了selinux context的属性，在ls -l时,文件后面会是一个点,但是使用了setfacl(set file access control lists)后,点号就会变成加号.</p>
+<h3 id="简单的方法">简单的方法</h3><p>远离这一切,可以直接关闭iptables和selinux,很明显很不安全 :)</p>
+<pre><code>systemctl mask firewalld
+systemctl <span class="literal">stop</span> firewalld  <span class="comment">#关闭防火墙(centos7)</span>
+iptables -<span class="constant">F</span>               <span class="comment">#暂时清除所有的规则</span>
+<span class="keyword">service</span> iptables <span class="literal">stop</span>     <span class="comment">#关闭防火墙(centos6和otherlinux系统)</span>
+setenforce <span class="number">0</span>              <span class="comment">#关闭selinux</span>
+</code></pre><p>如果你想从头学起，请看扩展阅读的第一个链接。<br>更详细的说明，请看我下面的笔记。</p>
+<hr>
+<h2 id="SELINUX_DETAIL">SELINUX DETAIL</h2><p>selinux has two policy for targeted and stricted,CentOS apply targeted.</p>
+<pre><code># selinux config <span class="string">file:</span><span class="regexp">/etc/</span>sysconfig/selinux
+$ getenforce
+Enforcing<span class="regexp">/Permissive/</span>Disabled
+
+$ sestatus
+SELinux <span class="string">status:</span>                 enabled
+SELinuxfs <span class="string">mount:</span>                <span class="regexp">/sys/</span>fs/selinux
+SELinux root <span class="string">directory:</span>         <span class="regexp">/etc/</span>selinux
+Loaded policy <span class="string">name:</span>             targeted
+Current <span class="string">mode:</span>                   enforcing
+Mode from config <span class="string">file:</span>          enforcing
+Policy MLS <span class="string">status:</span>              enabled
+Policy deny_unknown <span class="string">status:</span>     allowed
+Max kernel policy <span class="string">version:</span>      <span class="number">28</span>
+</code></pre><p>注释：<br>MLS: Multi-LevelSecurity(MLS) and non-MLS</p>
+<p>常用命令：</p>
+<pre><code>sestatus -v                 <span class="comment"># more detail</span>
+sestatus -b                 <span class="comment"># display current system soft selinux status</span>
+getsebool <span class="operator">-a</span> | grep httpd   <span class="comment"># same as sestatus -b</span>
+semodule <span class="operator">-l</span>                 <span class="comment"># list all selinux module</span>
+ls <span class="operator">-l</span> /etc/selinux/targeted/modules/active/modules/ <span class="comment"># same as semodule -l</span>
+
+
+id                          <span class="comment">#show cur user context</span>
+ls -Z/--context
+cp -Z/--context
+ps -Z/--context
+chcon -t etc_t test.txt
+setfiles
+restorecon
+
+
+<span class="comment"># SELINUX=enforcing would disable sshd non-22 port access until:</span>
+semanage port <span class="operator">-a</span> -t ssh_port_t -p tcp <span class="number">12345</span>
+
+<span class="comment"># copy file from other where,can not open by browser</span>
+restorecon -R -v /var/www/html
+
+<span class="comment"># check httpd_disable_trans, ftpd_anon_write</span>
+getsebool ftpd_anon_write
+getsebool httpd_<span class="built_in">disable</span>_trans
+<span class="comment"># httpd_disable_trans is off,we could open it by:</span>
+setsebool httpd_<span class="built_in">disable</span>_trans=<span class="number">1</span>
+<span class="comment"># or just:</span>
+setsebool httpd_<span class="built_in">disable</span>_trans on
+</code></pre><h1 id="Advance">Advance</h1><h2 id="Basic">Basic</h2><p>system_u:object_r:locale_t:s0</p>
+<ul>
+<li>Each Linux user account maps to an SELinux user</li>
+<li>the root user that owns the file is mapped to the system_u SELinux user. This mapping is done by the SELinux policy.</li>
+<li>In Linux, a user runs a process. This can be as simple as the user jo opening a document in the vi editor (it will be jo’s account running the vi process) or a service account running the httpd daemon. In the SELinux world, a process (a daemon or a running program) is called a subject.</li>
+<li>An object in SELinux is anything that can be acted upon. This can be a file, a directory, a port, a tcp socket, the cursor, or perhaps an X server. The actions that a subject can perform on an object are the subject’s permissions.</li>
+<li>third section,This is the part that defines what type the file or directory belongs to.</li>
+<li>The fourth part of the security context, s0, has to do with multilevel security or MLS. Basically this is another way of enforcing SELinux security policy, and this part shows the sensitivity of the resource (s0)</li>
+</ul>
+<p>SELinux Users are suffixed by “u”, roles are suffixed by “r” and types (for files) or domains (for processes) are suffixed by “_t”.</p>
+<h3 id="Permernet_store">Permernet store</h3><p>chcon is a temporary measure, a file system relabel or running the restorecon command will revert the file back to its original context.<br>But if you don’t know the file’s correct context, how does the system know which context to apply when it runs restorecon?<br>Conveniently, SELinux “remembers” the context of every file or directory in the server. In CentOS 7, contexts of files already existing in the system are listed in the /etc/selinux/targeted/contexts/files/file_contexts file. It’s a large file and it lists every file type associated with every application supported by the Linux distribution. Contexts of new directories and files are recorded in the /etc/selinux/targeted/contexts/files/file_contexts.local file.</p>
+<h2 id="the_SELinux_domain">the SELinux domain</h2><pre><code>cat /etc/<span class="built_in">selinux</span>/targeted/contexts/files/file_contexts
+
+
+&gt;[<span class="literal">root</span>@fly files]<span class="comment"># ll -h</span>
+total <span class="number">1.7</span>M
+-rw-r--r--. <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span> <span class="number">346</span>K <span class="constant">Dec</span> <span class="number">26</span> <span class="number">02</span>:<span class="number">52</span> file_contexts
+-rw-------. <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span> <span class="number">1.3</span>M <span class="constant">Dec</span> <span class="number">26</span> <span class="number">02</span>:<span class="number">52</span> file_contexts.bin
+-rw-r--r--. <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span>  <span class="number">13</span>K <span class="constant">Dec</span> <span class="number">26</span> <span class="number">02</span>:<span class="number">52</span> file_contexts.homedirs
+-rw-------. <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span>  <span class="number">42</span>K <span class="constant">Dec</span> <span class="number">26</span> <span class="number">02</span>:<span class="number">52</span> file_contexts.homedirs.bin
+-rw-r--r--. <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span>    <span class="number">0</span> <span class="constant">Dec</span> <span class="number">16</span> <span class="number">23</span>:<span class="number">31</span> file_contexts.local
+-rw-------. <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span>   <span class="number">16</span> <span class="constant">Dec</span> <span class="number">26</span> <span class="number">02</span>:<span class="number">52</span> file_contexts.local.bin
+-rw-r--r--. <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span>    <span class="number">0</span> <span class="constant">Dec</span> <span class="number">16</span> <span class="number">23</span>:<span class="number">30</span> file_contexts.subs
+-rw-r--r--. <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span>  <span class="number">435</span> <span class="constant">Dec</span> <span class="number">16</span> <span class="number">23</span>:<span class="number">30</span> file_contexts.subs_dist
+-rw-r--r--. <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span>  <span class="number">139</span> <span class="constant">Dec</span> <span class="number">16</span> <span class="number">23</span>:<span class="number">30</span> media
+</code></pre><h3 id="two-step_process">two-step process</h3><pre><code>semanage fcontext --<span class="built_in">add</span> --<span class="built_in">type</span> httpd_sys_content_t <span class="string">"/www(/.*)?"</span>
+semanage fcontext --<span class="built_in">add</span> --<span class="built_in">type</span> httpd_sys_content_t <span class="string">"/www/html(/.*)?"</span>
+</code></pre><p>tips:if show</p>
+<pre><code><span class="attribute">semanage</span>: <span class="string">command not found</span>
+</code></pre><p>you may install full selinux distribution</p>
+<pre><code>yum install policycoreutils policycoreutils-python <span class="built_in">selinux</span>-policy <span class="built_in">selinux</span>-policy-targeted libselinux-utils setroubleshoot-server setools setools-console mcstrans
+</code></pre><p>To make sure, we can check the file context database (note that we are using the file_contexts.local file):</p>
+<pre><code>cat <span class="regexp">/etc/</span>selinux<span class="regexp">/targeted/</span>contexts<span class="regexp">/files/</span>file_contexts.local
+</code></pre><p>You should see the updated contexts:</p>
+<pre><code># This file is auto-generated by libsemanage
+# Do not edit directly.
+<span class="regexp">/www(/</span>.*)?    system_u:<span class="string">object_r:</span><span class="string">httpd_sys_content_t:</span>s0
+<span class="regexp">/www/</span>html(/.*)?    system_u:<span class="string">object_r:</span><span class="string">httpd_sys_content_t:</span>s0
+</code></pre><p>Next, we will run the restorecon command. This will relabel the file or directory with what’s been recorded in the previous step:<br>There is a nifty tool called matchpathcon that can help troubleshoot context-related problems.<br>matchpathcon -V /www/html/index.html<br>/www/html/index.html has context unconfined_u:object_r:default_t:s0, should be system_u:object_r:httpd_sys_content_t:s0</p>
+<pre><code>restorecon -Rv /www
+matchpathcon -V /www/html/index<span class="class">.html</span>
+
+/www/html/index<span class="class">.html</span> verified.
+</code></pre><h2 id="Domain_Transition">Domain Transition</h2><p>So far we have seen how processes access file system resources. We will now see how processes access other processes.</p>
+<p>This transition is not something the application or the user can control. This has been stipulated in the SELinux policy that loads into memory as the system boots. In a non-SELinux server a user can start a process by switching to a more powerful account (provided she or he has the right to do so). In SELinux, such access is controlled by pre-written policies. And that’s another reason SELinux is said to implement Mandatory Access Control.</p>
+<pre><code>sesearch -s init_t -t ftpd_exec_t -c file -p<span class="instruction"> execute </span>-Ad
+</code></pre><p>The result shows that processes within initt domain can read, get attribute, execute, and open files of ftpdexec_t context:</p>
+<p>Found 1 semantic av rules:<br>   allow init_t ftpd_exec_t : file { read getattr execute open } ;<br>Next, we check if the binary file is the entrypoint for the target domain ftpd_t:</p>
+<pre><code>sesearch <span class="operator">-s</span> ftpd_t -t ftpd_<span class="built_in">exec</span>_t -c file -p entrypoint -Ad
+</code></pre><p>And indeed it is so:</p>
+<p>Found 1 semantic av rules:<br>   allow ftpd_t ftpd_exec_t : file { ioctl read getattr lock execute execute_no_trans entrypoint open } ;<br>And finally, the source domain initt needs to have permission to transition to the target domain ftpdt:</p>
+<pre><code>sesearch -s init_t -t ftpd_t -c process -<span class="tag">p</span> <span class="attribute">transition</span> -Ad
+</code></pre><p>As we can see below, the source domain has that permission:</p>
+<p>Found 1 semantic av rules:<br>   allow init_t ftpd_t : process transition ;</p>
+<h3 id="the_SELinux_user">the SELinux user</h3><p> Multi Category Security (MLS / MCS)<br>SELinux users are defined in the policy that’s loaded into memory at boot time, and there are only a few of these users.<br>When SELinux is enforced, each regular Linux user account is mapped to an SELinux user account. There can be multiple user accounts mapped to the same SELinux user. This mapping enables a regular account to inherit the permission of its SELinux counterpart.<br>to seee mapping</p>
+<pre><code>semanage login <span class="operator">-l</span>
+</code></pre><p>system_u is a different class of user, meant for running processes or daemons.<br>to see what SELinux users are available in the system</p>
+<pre><code>semanage user <span class="operator">-l</span>
+</code></pre><p>So what this really means is that any Linux user that maps to the unconfined_u user will have the privileges to run any app that runs within the unconfined_t domain.<br>id -Z</p>
+<h2 id="Other">Other</h2><p>restorecond - daemon that watches for file creation and then sets the default SELinux file context</p>
+<h4 id="Further_Reading:">Further Reading:</h4><p><a href="https://www.digitalocean.com/community/tutorials/an-introduction-to-selinux-on-centos-7-part-2-files-and-processes" target="_blank" rel="external">intro selinux by DO</a><br><a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7-Beta/html/SELinux_Users_and_Administrators_Guide/chap-Security-Enhanced_Linux-Introduction.html" target="_blank" rel="external">redhat selinux offical</a><br><a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/pdf/Security-Enhanced_Linux/Red_Hat_Enterprise_Linux-6-Security-Enhanced_Linux-en-US.pdf" target="_blank" rel="external">redhat selinux offical pdf version</a></p>
+
+    
+	</div>
+	<footer class="entry-footer">
+		<div class="entry-meta-footer">
+			<span class="category">
+				
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>
+  </div>
+
+			</span>
+			<span class="tags">
+				
+			</span>
+		</div>
+	</footer>
+	
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2014/11/01/glossary/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">
+        
+          名词解释
+        
+      </div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+    </div>
+    <div class="mb-search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="q" value="site:vastiny.com">
+  </form>
+</div>
+<footer id="footer">
+	<h1 class="footer-blog-title">
+		<a href="/">Vastiny</a>
+	</h1>
+	<span class="copyright">
+		&copy; 2015 yantze<br>
+		Modify from <a href="http://sanographix.github.io/tumblr/apollo/" target="_blank">Apollo</a> theme, designed by <a href="http://www.sanographix.net/" target="_blank">SANOGRAPHIX.NET</a><br>
+		Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	</span>
+</footer>
+    
+<script>
+  var disqus_shortname = 'vastiny';
+  
+  var disqus_url = 'http://vastiny.com/2015/02/02/selinux/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//go.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+  </div>
+</body>
+</html>

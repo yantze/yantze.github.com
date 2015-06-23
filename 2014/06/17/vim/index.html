@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Vim | Vastiny</title>
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="Vim 是个神奇的编辑器，不论编辑哪种语言的代码，总能找到一些插件来提升编码体验。就算是用了挺久的 Vim，也时不时地会听到别人说起一些自己从没用过但是很实用的技巧。会怀念 Sublime Text  功能强大却又容易上手的设计理念。但是从没有一种理由让我换用其它编辑器，因为总会有一个 Vim 插件能够填补你内心深处的不满足。我的使用原则就是，能用就用，如果有更好的IDE就使用IDE，不要走火入魔">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vim">
+<meta property="og:url" content="http://vastiny.com/2014/06/17/vim/index.html">
+<meta property="og:site_name" content="Vastiny">
+<meta property="og:description" content="Vim 是个神奇的编辑器，不论编辑哪种语言的代码，总能找到一些插件来提升编码体验。就算是用了挺久的 Vim，也时不时地会听到别人说起一些自己从没用过但是很实用的技巧。会怀念 Sublime Text  功能强大却又容易上手的设计理念。但是从没有一种理由让我换用其它编辑器，因为总会有一个 Vim 插件能够填补你内心深处的不满足。我的使用原则就是，能用就用，如果有更好的IDE就使用IDE，不要走火入魔">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vim">
+<meta name="twitter:description" content="Vim 是个神奇的编辑器，不论编辑哪种语言的代码，总能找到一些插件来提升编码体验。就算是用了挺久的 Vim，也时不时地会听到别人说起一些自己从没用过但是很实用的技巧。会怀念 Sublime Text  功能强大却又容易上手的设计理念。但是从没有一种理由让我换用其它编辑器，因为总会有一个 Vim 插件能够填补你内心深处的不满足。我的使用原则就是，能用就用，如果有更好的IDE就使用IDE，不要走火入魔">
+  
+    <link rel="alternative" href="/atom.xml" title="Vastiny" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-47857849-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</head>
+<body>
+  <div id="container">
+    <div class="mobile-nav-panel">
+	<i class="icon-reorder icon-large"></i>
+</div>
+<header id="header">
+	<h1 class="blog-title">
+		<a href="/">Vastiny</a>
+	</h1>
+	<nav class="nav">
+		<ul>
+			<li><a href="/archives">Archives</a></li><li><a href="/about.html">About</a></li>
+			<li><a id="nav-search-btn" class="nav-icon" title="Search"></a></li>
+			<li><a href="/atom.xml" id="nav-rss-link" class="nav-icon" title="RSS Feed"></a></li>
+		</ul>
+	</nav>
+	<div id="search-form-wrap">
+		<form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="q" value="site:http://vastiny.com"></form>
+	</div>
+</header>
+    <div id="main">
+      <article id="post-vim" class="post">
+	<footer class="entry-meta-header">
+		<span class="meta-elements date">
+			<a href="/2014/06/17/vim/" class="article-date">
+  <time datetime="2014-06-17T13:24:00.000Z" itemprop="datePublished">2014-06-17</time>
+</a>
+		</span>
+		<span class="meta-elements author">yantze</span>
+		<div class="commentscount">
+			
+				<a href="http://vastiny.com/2014/06/17/vim/#disqus_thread" class="article-comment-link">Comments</a>
+			
+		</div>
+	</footer>
+	
+	<header class="entry-header">
+		
+  
+    <h1 class="article-title entry-title" itemprop="name">
+      Vim
+    </h1>
+  
+
+	</header>
+	<div class="entry-content">
+		
+    	<p>Vim 是个神奇的编辑器，不论编辑哪种语言的代码，总能找到一些插件来提升编码体验。就算是用了挺久的 Vim，也时不时地会听到别人说起一些自己从没用过但是很实用的技巧。会怀念 Sublime Text  功能强大却又容易上手的设计理念。但是从没有一种理由让我换用其它编辑器，因为总会有一个 Vim 插件能够填补你内心深处的不满足。<br>我的使用原则就是，能用就用，如果有更好的IDE就使用IDE，不要走火入魔就行。<br>something else;</p>
+<p>最开始接触VIM的时候，听人说VIM很好，就用了一下VIM，看VIM简陋不堪，所以就搁置了几个月，后来看到了<a href="https://github.com/ruchee/vimrc" target="_blank" rel="external">Ruchee</a>的vim配置文档，他的配置简单容易部署，所以后来在几分钟就建好了一个漂亮的vim编辑器的时候，高效编辑，高度灵活，我就喜欢上了这款编辑器。<br>下面是我github上<a href="https://github.com/yantze/vimrc" target="_blank" rel="external">vim项目</a>的一部分说明</p>
+<h4 id="shortcut">shortcut</h4><pre><code>Ctrl+P          快速查找当前文件夹下所有子目录的文件,ctrl+j/k上下选择文件
+:ag             查找当前目录下的所有文件的关键字
+,gd             使用YCM的快速查找头文件定义,类似vs中的F12
+,<span class="keyword">ci</span>             注释当前行(可选中)
+,cm             块注释(可选中)
+key&lt;<span class="keyword">Tab</span>&gt;        UltiSnip And YCM 可以自动补全，UltiSnip对py，ycm对c好一些
+                &lt;c-j/k&gt;上下选择下一个瞄准位
+&lt;c-<span class="keyword">n</span>&gt;&lt;c-j/k&gt;    用&lt;c-<span class="keyword">n</span>&gt;当前选中的行，用&lt;c-j/k&gt;来移动行的位置(vim-multipe-cursors)
+&lt;<span class="keyword">m</span>-j/k&gt;         用alt/command+j/k移动当前行的位置(功能同上)
+&lt;c-<span class="keyword">n</span>&gt;           不停的选中&lt;c-<span class="keyword">n</span>&gt;,可以执行多光标编辑
+                &lt;c-p&gt;回到前一个,&lt;c-x&gt;放弃当前这个光标到下一个
+                其中i,a,I,A可以在insert模式，c,s可以在normal模式，c是清除当前选中的文字
+                有个小bug,就是在多光标选中模式下，要先按i或者a这个键，再按I/A
+,mt             生成每个语言的ctags文件，可以通过ctrl+]跳转和ctrl+t返回
++/-             +可以扩大选择区域/-相反
+,bb /,bn&lt;<span class="keyword">type</span> <span class="keyword">char</span>&gt; 按等于号对其或者自定义符号对齐
+:<span class="keyword">Sw</span>             当需要root权限保存时，不用重新打开
+:DiffSaved      比较在保存文件之后修改了什么那些内容
+:<span class="keyword">Man</span> <span class="keyword">glob</span>       查看linux关于<span class="keyword">glob</span>的<span class="keyword">man</span>文档(only linux/<span class="keyword">mac</span>)
+:<span class="keyword">Man</span> <span class="keyword">glob</span>.php   查看从php.<span class="keyword">net</span>中访问<span class="keyword">glob</span>的相关语法和示例(only linux/<span class="keyword">mac</span>)
+K               判断文件类型，自动调用:<span class="keyword">Man</span> function/command name
+</code></pre><h4 id="PHP补全">PHP补全</h4><p>可以使用Ctrl+x,Ctrl+o来补全内容</p>
+<h3 id="vim学习">vim学习</h3><p>如果是初学者，要学会这几个技巧<br>vim有很多的‘模式’，在normal模式下<br>jkhl: 这四个键分别代表：下上左右<br>按字母i，进入insert插入模式，然后就可以输入文字<br>按ESC键，退出insert进入normal模式<br>退出要先按英文冒号:然后输入q</p>
+<p>这些是基本的规则，如果要熟练的话，需要做一些高级的练习：</p>
+<p><a href="http://coolshell.cn/articles/5426.html" target="_blank" rel="external">简明Vim练级攻略</a></p>
+<p><a href="http://vim-adventures.com/" target="_blank" rel="external">vim游戏</a></p>
+<h3 id="一些常用快捷键说明">一些常用快捷键说明</h3><pre><code>/xxx                    查找xxx字符串
+,ci                     注释选定行(自动识别文件类型后添加注释)
+,n/,p                   切换buffer的标签(因为vim的一个窗口里面有多个buffer)
+<span class="code">                        同时设置了新的快捷键F2/F3对应,n/,p</span>
+10G                     数字10和大写的G，跳到第十行
+
+<span class="attribute">:s/^/#                  用"#"注释当前行 ,":s/&lt;search&gt;/&lt;replace&gt;"</span>
+<span class="attribute">:%s/x/b                 在所有行替换x为b,":%s/&lt;search&gt;/&lt;replace&gt;"</span>
+:2,50s/x/b              在2~50行替换x为b
+:.,+3s/x/b              在前行和当前行后面的三行，替换x为b
+:set notextmode         这个可以去掉^M这个符号
+:set pastetoggle        可以解决在linux命令行复制内容的时候，
+<span class="code">                        内容被识别为vim操作和乱序缩进,在我的配置中快捷键为F4</span>
+
+f&lt;char&gt;                 查找当前行的字符
+gb                      go browser，光标下如果是url链接，自动用默认浏览器打开链接，
+<span class="code">                        如果是选中的字符串，就用浏览器搜索, ,gb是另外一个插件提供的同样功能</span>
+gf                      如果光标下是一个文件路径，则可以用vim自动打开这个文件
+gd                      找到光标下的标签定义
+Ctrl<span class="code">+Tab/Ctrl+</span>Shift+Tab 切换vim标签
+Ctrl+w,v/h              在gvim下创建多窗口
+Ctrl+h/j/k/l            在gvim下切换多窗口
+]p                      和p的功能差不多，但是它会自动调整被粘贴的文本的缩进去适应当前代码的位置
+K                       在Man里面查找光标当前所在处的词
+Ctrl<span class="code">+X,Ctrl+</span>O           自动补全,ycm占用Ctrl+n/p
+zz                      把当前行移到屏幕中间
+</code></pre><h3 id="一些不常用但是实用的设置">一些不常用但是实用的设置</h3><pre><code>:set display=uhex       这个是用来查看^@这种不可显示的字符，自动转换这些字符为hex进制
+<span class="code">                        也可以ga查看当前光标的进制</span>
+,16                     转换当前文件为16进制，,r16为恢复，只有十六进制部分修改才有用
+<span class="attribute">:vert command           垂直打开command中的命令,示例 :vert</span> h manpageview
+</code></pre><h4 id="Tips">Tips</h4><pre><code><span class="built_in">c</span>/<span class="built_in">c</span>++/objc/objc++   可以使用<span class="type">YCM</span>
+路径补全            可以使用<span class="type">YCM</span>
+光标定位            &lt;<span class="built_in">c</span>-o/i&gt;上下选择前一次后一次光标位.
+各个语言的补全      看~/.vim/snippets
+ctags               可以自行在<span class="built_in">c</span>/php等头文件建立ctags文件
+                    <span class="built_in">c</span>比如/usr/local/include, php比如pear的包管理中
+</code></pre><h4 id="Snip">Snip</h4><p>一旦你输入下面的字符，按Tab键自动补全</p>
+<pre><code><span class="shebang">#!</span>
+<span class="keyword">class</span>
+html5
+</code></pre><h4 id="和"><leader>和<buffer></buffer></leader></h4><p><leader>默认是一个按钮，指的是反斜杠’\’，不过我在配置中设置成了’,’,减少小指的负担。</leader></p>
+<p><buffer>其实就是你当前下面的buffer而已。</buffer></p>
+<p>当你了解到了基本的使用方法后，你可以读看看我在.vimrc中的文档，里面有很多详细的技巧，熟悉后能和sublime和notepad++匹敌<br>当然_vimrc.bundles这个文件里面是需要加载的插件，里面有介绍每个插件是拿来干嘛的，也可以了解一下<br>我之前学习vim的时候，收集到的一些资料，这次重新复习了里面的内容，整理了一下发布了出来，就把它当成中级vim的入门手册吧，<a href="https://github.com/yantze/vimrc/blob/master/VIMdoc.md" target="_blank" rel="external">下载地址</a>。</p>
+<h3 id="Thanks">Thanks</h3><p>这份vim配置的所以完成，会如此热爱vim，是看到了ruchee的vimrc的配置<br>其完善的配置让我感觉vim是如此的简单<br><a href="https://github.com/ruchee/vimrc" target="_blank" rel="external">ruchee</a></p>
+<p>我也参考了很多的vim配置:<br><a href="https://github.com/coderhwz/vimfiles" target="_blank" rel="external">vimfiles</a><br><a href="https://github.com/luin/dotfiles" target="_blank" rel="external">dotfiles</a><br><a href="https://github.com/rhyzx/vimrc" target="_blank" rel="external">vimrc</a></p>
+<p>前段时间找到了vim的集成配置，功很强大<br><a href="http://vim.spf13.com/" target="_blank" rel="external">The Ultimate Vim Distribution</a><br>初学教程<br><a href="http://learnvimscriptthehardway.stevelosh.com/" target="_blank" rel="external">Learn Vimscript the Hard Way</a><br><a href="http://www.cnbeta.com/articles/185694.htm" target="_blank" rel="external">为什么Vim使用HJKL键作为方向键</a></p>
+
+    
+	</div>
+	<footer class="entry-footer">
+		<div class="entry-meta-footer">
+			<span class="category">
+				
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/tools/">tools</a>
+  </div>
+
+			</span>
+			<span class="tags">
+				
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vim/">vim</a></li></ul>
+
+			</span>
+		</div>
+	</footer>
+	
+    
+<nav id="article-nav">
+  
+    <a href="/2014/06/25/yaf/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Yaf和Requirejs
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+    </div>
+    <div class="mb-search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="q" value="site:vastiny.com">
+  </form>
+</div>
+<footer id="footer">
+	<h1 class="footer-blog-title">
+		<a href="/">Vastiny</a>
+	</h1>
+	<span class="copyright">
+		&copy; 2015 yantze<br>
+		Modify from <a href="http://sanographix.github.io/tumblr/apollo/" target="_blank">Apollo</a> theme, designed by <a href="http://www.sanographix.net/" target="_blank">SANOGRAPHIX.NET</a><br>
+		Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	</span>
+</footer>
+    
+<script>
+  var disqus_shortname = 'vastiny';
+  
+  var disqus_url = 'http://vastiny.com/2014/06/17/vim/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//go.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+  </div>
+</body>
+</html>

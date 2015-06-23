@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>算法之美 | Vastiny</title>
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="第一题一个专杀矮人的巨人让10个矮人从低到高排列，每个矮人能看见前面所有比他矮的人。巨人随机把白色或者黑色帽子放在每个矮人头上。矮人看不到自己的帽子。巨人告诉矮人，他将要求每个矮人回答帽子的颜色，从最高的开始。如果谁答错了就杀掉谁。每个矮人都能听见前一个人的回答，但是听不见被杀的声音。该用什么方法才能保证矮人被杀的数量最少，至少能挽救几个人的生命？粗略答案:link
++2014-06-30 17:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法之美">
+<meta property="og:url" content="http://vastiny.com/2014/08/15/concept/index.html">
+<meta property="og:site_name" content="Vastiny">
+<meta property="og:description" content="第一题一个专杀矮人的巨人让10个矮人从低到高排列，每个矮人能看见前面所有比他矮的人。巨人随机把白色或者黑色帽子放在每个矮人头上。矮人看不到自己的帽子。巨人告诉矮人，他将要求每个矮人回答帽子的颜色，从最高的开始。如果谁答错了就杀掉谁。每个矮人都能听见前一个人的回答，但是听不见被杀的声音。该用什么方法才能保证矮人被杀的数量最少，至少能挽救几个人的生命？粗略答案:link
++2014-06-30 17:">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="算法之美">
+<meta name="twitter:description" content="第一题一个专杀矮人的巨人让10个矮人从低到高排列，每个矮人能看见前面所有比他矮的人。巨人随机把白色或者黑色帽子放在每个矮人头上。矮人看不到自己的帽子。巨人告诉矮人，他将要求每个矮人回答帽子的颜色，从最高的开始。如果谁答错了就杀掉谁。每个矮人都能听见前一个人的回答，但是听不见被杀的声音。该用什么方法才能保证矮人被杀的数量最少，至少能挽救几个人的生命？粗略答案:link
++2014-06-30 17:">
+  
+    <link rel="alternative" href="/atom.xml" title="Vastiny" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-47857849-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</head>
+<body>
+  <div id="container">
+    <div class="mobile-nav-panel">
+	<i class="icon-reorder icon-large"></i>
+</div>
+<header id="header">
+	<h1 class="blog-title">
+		<a href="/">Vastiny</a>
+	</h1>
+	<nav class="nav">
+		<ul>
+			<li><a href="/archives">Archives</a></li><li><a href="/about.html">About</a></li>
+			<li><a id="nav-search-btn" class="nav-icon" title="Search"></a></li>
+			<li><a href="/atom.xml" id="nav-rss-link" class="nav-icon" title="RSS Feed"></a></li>
+		</ul>
+	</nav>
+	<div id="search-form-wrap">
+		<form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="q" value="site:http://vastiny.com"></form>
+	</div>
+</header>
+    <div id="main">
+      <article id="post-concept" class="post">
+	<footer class="entry-meta-header">
+		<span class="meta-elements date">
+			<a href="/2014/08/15/concept/" class="article-date">
+  <time datetime="2014-08-15T10:18:00.000Z" itemprop="datePublished">2014-08-15</time>
+</a>
+		</span>
+		<span class="meta-elements author">yantze</span>
+		<div class="commentscount">
+			
+				<a href="http://vastiny.com/2014/08/15/concept/#disqus_thread" class="article-comment-link">Comments</a>
+			
+		</div>
+	</footer>
+	
+	<header class="entry-header">
+		
+  
+    <h1 class="article-title entry-title" itemprop="name">
+      算法之美
+    </h1>
+  
+
+	</header>
+	<div class="entry-content">
+		
+    	<h3 id="第一题">第一题</h3><p>一个专杀矮人的巨人让10个矮人从低到高排列，每个矮人能看见前面所有比他矮的人。巨人随机把白色或者黑色帽子放在每个矮人头上。矮人看不到自己的帽子。巨人告诉矮人，他将要求每个矮人回答帽子的颜色，从最高的开始。如果谁答错了就杀掉谁。每个矮人都能听见前一个人的回答，但是听不见被杀的声音。该用什么方法才能保证矮人被杀的数量最少，至少能挽救几个人的生命？<br>粗略答案:<a href="http://zhidao.baidu.com/question/582794545409870245.html" target="_blank" rel="external">link</a></p>
+<p>+2014-06-30 17:25</p>
+<h3 id="第二题">第二题</h3><p>王师傅是卖鞋的，一双鞋进价 20 元卖 30 元，顾客来买鞋给了张 50 的，王师傅没有零钱，于是找邻居换了 50 元零钱。<br>事后邻居发现钱是假的，王师傅又赔了邻居 50 元。<br>请问：王师傅一共损失了多少钱？<br>详细答案:<a href="http://justjavac.com/other/2013/08/11/how-much-money-has-wang-lost.html" target="_blank" rel="external">link</a></p>
+<p>+2014-07-20 10:22</p>
+<h3 id="第三题">第三题</h3><p>假设有三扇门，其中一扇门后面有奖，还有一个主持人，主持人知道哪扇门后面有奖。<br>你先随机选择一扇门，然后主持人会帮你打开另外两扇门中的一扇，可以确定的是，打开的这扇门肯定没有奖品。<br>现在，你有一个改变主意的机会，即在剩下的两扇门中，你可以坚持选择你本来选中的这扇门，也可以改变主意选择另外的一扇门。<br>问：你改变主意和不改变主意，中奖的概率分别是多少？<br>详细答案:<a href="http://www.v2ex.com/t/90960#reply47" target="_blank" rel="external">link</a><br>进阶:<a href="http://www.v2ex.com/t/71793" target="_blank" rel="external">link</a></p>
+<p>+2014-08-16 18:18:00</p>
+<h3 id="第四“题”">第四“题”</h3><p>因为是译言网的翻译，所以直接贴它的文章网址吧<br>这篇文章很不错，总共有十二个问题，都讲得很容易懂，三门的问题这里有最好的解答。<br><a href="http://select.yeeyan.org/view/AhyuChen/357495" target="_blank" rel="external">最具争议的12个数学事实</a></p>
+<p>+2015-04-16 19:54:48</p>
+<h3 id="第五题">第五题</h3><p>两只青蛙绕操场跳，一只比另一只每次跳的远一点，求相遇时间</p>
+<p><code>changelog:</code><br>write: 2014-06-11 21:24<br>add forth questiong: 2014-08-13 22:57</p>
+
+    
+	</div>
+	<footer class="entry-footer">
+		<div class="entry-meta-footer">
+			<span class="category">
+				
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/relax/">relax</a>
+  </div>
+
+			</span>
+			<span class="tags">
+				
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/lts/">lts</a></li></ul>
+
+			</span>
+		</div>
+	</footer>
+	
+    
+<nav id="article-nav">
+  
+    <a href="/2014/08/26/workflow/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          WorkFlow
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2014/06/25/yaf/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">
+        
+          Yaf和Requirejs
+        
+      </div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+    </div>
+    <div class="mb-search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="q" value="site:vastiny.com">
+  </form>
+</div>
+<footer id="footer">
+	<h1 class="footer-blog-title">
+		<a href="/">Vastiny</a>
+	</h1>
+	<span class="copyright">
+		&copy; 2015 yantze<br>
+		Modify from <a href="http://sanographix.github.io/tumblr/apollo/" target="_blank">Apollo</a> theme, designed by <a href="http://www.sanographix.net/" target="_blank">SANOGRAPHIX.NET</a><br>
+		Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	</span>
+</footer>
+    
+<script>
+  var disqus_shortname = 'vastiny';
+  
+  var disqus_url = 'http://vastiny.com/2014/08/15/concept/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//go.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+  </div>
+</body>
+</html>

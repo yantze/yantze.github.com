@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Vastiny</title>
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="yantze&apos;s blog 杨志的博客">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Vastiny">
+<meta property="og:url" content="http://vastiny.com/index.html">
+<meta property="og:site_name" content="Vastiny">
+<meta property="og:description" content="yantze&apos;s blog 杨志的博客">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vastiny">
+<meta name="twitter:description" content="yantze&apos;s blog 杨志的博客">
+  
+    <link rel="alternative" href="/atom.xml" title="Vastiny" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-47857849-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</head>
+<body>
+  <div id="container">
+    <div class="mobile-nav-panel">
+	<i class="icon-reorder icon-large"></i>
+</div>
+<header id="header">
+	<h1 class="blog-title">
+		<a href="/">Vastiny</a>
+	</h1>
+	<nav class="nav">
+		<ul>
+			<li><a href="/archives">Archives</a></li><li><a href="/about.html">About</a></li>
+			<li><a id="nav-search-btn" class="nav-icon" title="Search"></a></li>
+			<li><a href="/atom.xml" id="nav-rss-link" class="nav-icon" title="RSS Feed"></a></li>
+		</ul>
+	</nav>
+	<div id="search-form-wrap">
+		<form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="q" value="site:http://vastiny.com"></form>
+	</div>
+</header>
+    <div id="main">
+      
+  
+    <article id="post-selinux" class="post">
+	<footer class="entry-meta-header">
+		<span class="meta-elements date">
+			<a href="/2015/02/02/selinux/" class="article-date">
+  <time datetime="2015-02-02T15:24:00.000Z" itemprop="datePublished">2015-02-02</time>
+</a>
+		</span>
+		<span class="meta-elements author">yantze</span>
+		<div class="commentscount">
+			
+				<a href="http://vastiny.com/2015/02/02/selinux/#disqus_thread" class="article-comment-link">Comments</a>
+			
+		</div>
+	</footer>
+	
+	<header class="entry-header">
+		
+  
+    <h1 itemprop="name" class="entry-title">
+      <a class="article-title" href="/2015/02/02/selinux/">SELINUX</a>
+    </h1>
+  
+
+	</header>
+	<div class="entry-content">
+		
+    	<h2 id="中文叙述">中文叙述</h2><p>selinux就是一个强制访问控制系统(Security-Enhanced Linux),一般有两个策略,一个是NSA用的mls(restrict),一个是普通linux的用的targed,默认说的都是targed的策略.</p>
+<h3 id="常用情况">常用情况</h3><h4 id="新装的apache服务器启动之后,只能本机访问,其它网络不能访问">新装的apache服务器启动之后,只能本机访问,其它网络不能访问</h4><p>这个是iptable或者centos7的firewall没有开放80端口.</p>
+<p>if use iptables</p>
+<pre><code>iptables -A <span class="keyword">INPUT</span> -p tcp --dport 80 -j ACCEPT
+service iptables <span class="keyword">save</span>
+</code></pre><p>or firewall</p>
+<pre><code><span class="comment">firewall</span><span class="literal">-</span><span class="comment">cmd</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">zone=dmz</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">add</span><span class="literal">-</span><span class="comment">port=80/tcp</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">permanent</span>
+</code></pre><p>网站可以访问后,但是页面是apache的引导页,不是网站目录下的内容.<br>如果你在你的网站目录放的是从windows或者网络上拷贝下来的文件,很有可能selinux判断为httpd无权限读取这些文件,导致apache一直指向的是 /var/www/error/noindex.html或者/usr/share/httpd/noindex目录下的内容<br>有三个解决方法</p>
+<p>第一个是设置selinux的等级</p>
+<pre><code><span class="title">setenforce</span> <span class="number">0</span>
+</code></pre><p>第二个方法是</p>
+<pre><code>给网站目录下的文件设置httpd_sys_content_t域
+chcon -t default_t -R /<span class="keyword">var</span>/www/html
+</code></pre><p>第三个方法是</p>
+<p>如果你换了一个网站目录,或者想做成一个安装包,还想使用selinux,最好用这个方法.把规则添加给selinux.</p>
+<pre><code>semanage fcontext --<span class="built_in">add</span> --<span class="built_in">type</span> httpd_sys_content_t <span class="string">"/www(/.*)?"</span>
+semanage fcontext --<span class="built_in">add</span> --<span class="built_in">type</span> httpd_sys_content_t <span class="string">"/www/html(/.*)?"</span>
+</code></pre><p>这个时候,应该有生成一个policy文件,里面包含了目录相关的权限设置</p>
+<pre><code>cat <span class="regexp">/etc/</span>selinux<span class="regexp">/targeted/</span>contexts<span class="regexp">/files/</span>file_contexts.local
+</code></pre><p>是时候用restorecon了</p>
+<pre><code>restorecon -Rv <span class="regexp">/www/</span>html
+</code></pre><p>这个时候系统已经告诉你,已经转换成selinux认可的类型或者域了</p>
+<h4 id="限制用户对自己文档的不可操作">限制用户对自己文档的不可操作</h4><p>比如说我安排一个日志检查员,我不想让他执行程序,只是想让他看日志</p>
+<pre><code><span class="title">sebool</span> allow_guest_exec_content <span class="built_in">off</span>
+</code></pre><p>这样,那些默认的账户都是不能执行脚本文件的了.</p>
+<h3 id="一个有sudo权限的人,如何对他进行限制呢">一个有sudo权限的人,如何对他进行限制呢</h3><p>当然可以在visudo中有个列表显示这个用户的执行程序名,也可以用这种selinux限制好了规则的方法,这里的restricteduser就是一个拥有sudo权限的账户</p>
+<pre><code>semanage login <span class="operator">-a</span> <span class="operator">-s</span> user_u restricteduser
+</code></pre><p>这里说明一个就是user_u是user_r和user_t的合体,user_r代表的是可以执行哪些程序,user_t代表的是那些程序它有什么权限.<br>比如说这个用户拥有启动httpd服务的权限,但是他对这个网站的内容确是不可编辑的.</p>
+<h3 id="简明运作">简明运作</h3><p>selinux是构建在linux系统权限控制之上的一套系统,linux权限控制明显的一个问题就是,只分user/group/other,这个other有很多不同的用户,如果other的权限过大,会导致很多的问题出现.<br>selinux要的就是,user的权限是整个selinux系统中最小权限的存在.selinux也有一个天生缺陷,就是总有一个GOD可以操控一切.<br>在redhat系的文件系统中,文件属性后面有个小点或者加号,这个就是selinux和acl的设置:<br>当文件或者文件夹只使用了selinux context的属性，在ls -l时,文件后面会是一个点,但是使用了setfacl(set file access control lists)后,点号就会变成加号.</p>
+<h3 id="简单的方法">简单的方法</h3><p>远离这一切,可以直接关闭iptables和selinux,很明显很不安全 :)</p>
+<pre><code>systemctl mask firewalld
+systemctl <span class="literal">stop</span> firewalld  <span class="comment">#关闭防火墙(centos7)</span>
+iptables -<span class="constant">F</span>               <span class="comment">#暂时清除所有的规则</span>
+<span class="keyword">service</span> iptables <span class="literal">stop</span>     <span class="comment">#关闭防火墙(centos6和otherlinux系统)</span>
+setenforce <span class="number">0</span>              <span class="comment">#关闭selinux</span>
+</code></pre><p>如果你想从头学起，请看扩展阅读的第一个链接。<br>更详细的说明，请看我下面的笔记。</p>
+<hr>
+<h2 id="SELINUX_DETAIL">SELINUX DETAIL</h2><p>selinux has two policy for targeted and stricted,CentOS apply targeted.</p>
+<pre><code># selinux config <span class="string">file:</span><span class="regexp">/etc/</span>sysconfig/selinux
+$ getenforce
+Enforcing<span class="regexp">/Permissive/</span>Disabled
+
+$ sestatus
+SELinux <span class="string">status:</span>                 enabled
+SELinuxfs <span class="string">mount:</span>                <span class="regexp">/sys/</span>fs/selinux
+SELinux root <span class="string">directory:</span>         <span class="regexp">/etc/</span>selinux
+Loaded policy <span class="string">name:</span>             targeted
+Current <span class="string">mode:</span>                   enforcing
+Mode from config <span class="string">file:</span>          enforcing
+Policy MLS <span class="string">status:</span>              enabled
+Policy deny_unknown <span class="string">status:</span>     allowed
+Max kernel policy <span class="string">version:</span>      <span class="number">28</span>
+</code></pre><p>注释：<br>MLS: Multi-LevelSecurity(MLS) and non-MLS</p>
+<p>常用命令：</p>
+<pre><code>sestatus -v                 <span class="comment"># more detail</span>
+sestatus -b                 <span class="comment"># display current system soft selinux status</span>
+getsebool <span class="operator">-a</span> | grep httpd   <span class="comment"># same as sestatus -b</span>
+semodule <span class="operator">-l</span>                 <span class="comment"># list all selinux module</span>
+ls <span class="operator">-l</span> /etc/selinux/targeted/modules/active/modules/ <span class="comment"># same as semodule -l</span>
+
+
+id                          <span class="comment">#show cur user context</span>
+ls -Z/--context
+cp -Z/--context
+ps -Z/--context
+chcon -t etc_t test.txt
+setfiles
+restorecon
+
+
+<span class="comment"># SELINUX=enforcing would disable sshd non-22 port access until:</span>
+semanage port <span class="operator">-a</span> -t ssh_port_t -p tcp <span class="number">12345</span>
+
+<span class="comment"># copy file from other where,can not open by browser</span>
+restorecon -R -v /var/www/html
+
+<span class="comment"># check httpd_disable_trans, ftpd_anon_write</span>
+getsebool ftpd_anon_write
+getsebool httpd_<span class="built_in">disable</span>_trans
+<span class="comment"># httpd_disable_trans is off,we could open it by:</span>
+setsebool httpd_<span class="built_in">disable</span>_trans=<span class="number">1</span>
+<span class="comment"># or just:</span>
+setsebool httpd_<span class="built_in">disable</span>_trans on
+</code></pre><h1 id="Advance">Advance</h1><h2 id="Basic">Basic</h2><p>system_u:object_r:locale_t:s0</p>
+<ul>
+<li>Each Linux user account maps to an SELinux user</li>
+<li>the root user that owns the file is mapped to the system_u SELinux user. This mapping is done by the SELinux policy.</li>
+<li>In Linux, a user runs a process. This can be as simple as the user jo opening a document in the vi editor (it will be jo’s account running the vi process) or a service account running the httpd daemon. In the SELinux world, a process (a daemon or a running program) is called a subject.</li>
+<li>An object in SELinux is anything that can be acted upon. This can be a file, a directory, a port, a tcp socket, the cursor, or perhaps an X server. The actions that a subject can perform on an object are the subject’s permissions.</li>
+<li>third section,This is the part that defines what type the file or directory belongs to.</li>
+<li>The fourth part of the security context, s0, has to do with multilevel security or MLS. Basically this is another way of enforcing SELinux security policy, and this part shows the sensitivity of the resource (s0)</li>
+</ul>
+<p>SELinux Users are suffixed by “u”, roles are suffixed by “r” and types (for files) or domains (for processes) are suffixed by “_t”.</p>
+<h3 id="Permernet_store">Permernet store</h3><p>chcon is a temporary measure, a file system relabel or running the restorecon command will revert the file back to its original context.<br>But if you don’t know the file’s correct context, how does the system know which context to apply when it runs restorecon?<br>Conveniently, SELinux “remembers” the context of every file or directory in the server. In CentOS 7, contexts of files already existing in the system are listed in the /etc/selinux/targeted/contexts/files/file_contexts file. It’s a large file and it lists every file type associated with every application supported by the Linux distribution. Contexts of new directories and files are recorded in the /etc/selinux/targeted/contexts/files/file_contexts.local file.</p>
+<h2 id="the_SELinux_domain">the SELinux domain</h2><pre><code>cat /etc/<span class="built_in">selinux</span>/targeted/contexts/files/file_contexts
+
+
+&gt;[<span class="literal">root</span>@fly files]<span class="comment"># ll -h</span>
+total <span class="number">1.7</span>M
+-rw-r--r--. <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span> <span class="number">346</span>K <span class="constant">Dec</span> <span class="number">26</span> <span class="number">02</span>:<span class="number">52</span> file_contexts
+-rw-------. <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span> <span class="number">1.3</span>M <span class="constant">Dec</span> <span class="number">26</span> <span class="number">02</span>:<span class="number">52</span> file_contexts.bin
+-rw-r--r--. <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span>  <span class="number">13</span>K <span class="constant">Dec</span> <span class="number">26</span> <span class="number">02</span>:<span class="number">52</span> file_contexts.homedirs
+-rw-------. <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span>  <span class="number">42</span>K <span class="constant">Dec</span> <span class="number">26</span> <span class="number">02</span>:<span class="number">52</span> file_contexts.homedirs.bin
+-rw-r--r--. <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span>    <span class="number">0</span> <span class="constant">Dec</span> <span class="number">16</span> <span class="number">23</span>:<span class="number">31</span> file_contexts.local
+-rw-------. <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span>   <span class="number">16</span> <span class="constant">Dec</span> <span class="number">26</span> <span class="number">02</span>:<span class="number">52</span> file_contexts.local.bin
+-rw-r--r--. <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span>    <span class="number">0</span> <span class="constant">Dec</span> <span class="number">16</span> <span class="number">23</span>:<span class="number">30</span> file_contexts.subs
+-rw-r--r--. <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span>  <span class="number">435</span> <span class="constant">Dec</span> <span class="number">16</span> <span class="number">23</span>:<span class="number">30</span> file_contexts.subs_dist
+-rw-r--r--. <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span>  <span class="number">139</span> <span class="constant">Dec</span> <span class="number">16</span> <span class="number">23</span>:<span class="number">30</span> media
+</code></pre><h3 id="two-step_process">two-step process</h3><pre><code>semanage fcontext --<span class="built_in">add</span> --<span class="built_in">type</span> httpd_sys_content_t <span class="string">"/www(/.*)?"</span>
+semanage fcontext --<span class="built_in">add</span> --<span class="built_in">type</span> httpd_sys_content_t <span class="string">"/www/html(/.*)?"</span>
+</code></pre><p>tips:if show</p>
+<pre><code><span class="attribute">semanage</span>: <span class="string">command not found</span>
+</code></pre><p>you may install full selinux distribution</p>
+<pre><code>yum install policycoreutils policycoreutils-python <span class="built_in">selinux</span>-policy <span class="built_in">selinux</span>-policy-targeted libselinux-utils setroubleshoot-server setools setools-console mcstrans
+</code></pre><p>To make sure, we can check the file context database (note that we are using the file_contexts.local file):</p>
+<pre><code>cat <span class="regexp">/etc/</span>selinux<span class="regexp">/targeted/</span>contexts<span class="regexp">/files/</span>file_contexts.local
+</code></pre><p>You should see the updated contexts:</p>
+<pre><code># This file is auto-generated by libsemanage
+# Do not edit directly.
+<span class="regexp">/www(/</span>.*)?    system_u:<span class="string">object_r:</span><span class="string">httpd_sys_content_t:</span>s0
+<span class="regexp">/www/</span>html(/.*)?    system_u:<span class="string">object_r:</span><span class="string">httpd_sys_content_t:</span>s0
+</code></pre><p>Next, we will run the restorecon command. This will relabel the file or directory with what’s been recorded in the previous step:<br>There is a nifty tool called matchpathcon that can help troubleshoot context-related problems.<br>matchpathcon -V /www/html/index.html<br>/www/html/index.html has context unconfined_u:object_r:default_t:s0, should be system_u:object_r:httpd_sys_content_t:s0</p>
+<pre><code>restorecon -Rv /www
+matchpathcon -V /www/html/index<span class="class">.html</span>
+
+/www/html/index<span class="class">.html</span> verified.
+</code></pre><h2 id="Domain_Transition">Domain Transition</h2><p>So far we have seen how processes access file system resources. We will now see how processes access other processes.</p>
+<p>This transition is not something the application or the user can control. This has been stipulated in the SELinux policy that loads into memory as the system boots. In a non-SELinux server a user can start a process by switching to a more powerful account (provided she or he has the right to do so). In SELinux, such access is controlled by pre-written policies. And that’s another reason SELinux is said to implement Mandatory Access Control.</p>
+<pre><code>sesearch -s init_t -t ftpd_exec_t -c file -p<span class="instruction"> execute </span>-Ad
+</code></pre><p>The result shows that processes within initt domain can read, get attribute, execute, and open files of ftpdexec_t context:</p>
+<p>Found 1 semantic av rules:<br>   allow init_t ftpd_exec_t : file { read getattr execute open } ;<br>Next, we check if the binary file is the entrypoint for the target domain ftpd_t:</p>
+<pre><code>sesearch <span class="operator">-s</span> ftpd_t -t ftpd_<span class="built_in">exec</span>_t -c file -p entrypoint -Ad
+</code></pre><p>And indeed it is so:</p>
+<p>Found 1 semantic av rules:<br>   allow ftpd_t ftpd_exec_t : file { ioctl read getattr lock execute execute_no_trans entrypoint open } ;<br>And finally, the source domain initt needs to have permission to transition to the target domain ftpdt:</p>
+<pre><code>sesearch -s init_t -t ftpd_t -c process -<span class="tag">p</span> <span class="attribute">transition</span> -Ad
+</code></pre><p>As we can see below, the source domain has that permission:</p>
+<p>Found 1 semantic av rules:<br>   allow init_t ftpd_t : process transition ;</p>
+<h3 id="the_SELinux_user">the SELinux user</h3><p> Multi Category Security (MLS / MCS)<br>SELinux users are defined in the policy that’s loaded into memory at boot time, and there are only a few of these users.<br>When SELinux is enforced, each regular Linux user account is mapped to an SELinux user account. There can be multiple user accounts mapped to the same SELinux user. This mapping enables a regular account to inherit the permission of its SELinux counterpart.<br>to seee mapping</p>
+<pre><code>semanage login <span class="operator">-l</span>
+</code></pre><p>system_u is a different class of user, meant for running processes or daemons.<br>to see what SELinux users are available in the system</p>
+<pre><code>semanage user <span class="operator">-l</span>
+</code></pre><p>So what this really means is that any Linux user that maps to the unconfined_u user will have the privileges to run any app that runs within the unconfined_t domain.<br>id -Z</p>
+<h2 id="Other">Other</h2><p>restorecond - daemon that watches for file creation and then sets the default SELinux file context</p>
+<h4 id="Further_Reading:">Further Reading:</h4><p><a href="https://www.digitalocean.com/community/tutorials/an-introduction-to-selinux-on-centos-7-part-2-files-and-processes" target="_blank" rel="external">intro selinux by DO</a><br><a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7-Beta/html/SELinux_Users_and_Administrators_Guide/chap-Security-Enhanced_Linux-Introduction.html" target="_blank" rel="external">redhat selinux offical</a><br><a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/pdf/Security-Enhanced_Linux/Red_Hat_Enterprise_Linux-6-Security-Enhanced_Linux-en-US.pdf" target="_blank" rel="external">redhat selinux offical pdf version</a></p>
+
+    
+	</div>
+	<footer class="entry-footer">
+		<div class="entry-meta-footer">
+			<span class="category">
+				
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>
+  </div>
+
+			</span>
+			<span class="tags">
+				
+			</span>
+		</div>
+	</footer>
+	
+</article>
+
+
+	<hr class="article-devider">
+
+
+
+  
+    <article id="post-glossary" class="post">
+	<footer class="entry-meta-header">
+		<span class="meta-elements date">
+			<a href="/2014/11/01/glossary/" class="article-date">
+  <time datetime="2014-11-01T13:24:00.000Z" itemprop="datePublished">2014-11-01</time>
+</a>
+		</span>
+		<span class="meta-elements author">yantze</span>
+		<div class="commentscount">
+			
+				<a href="http://vastiny.com/2014/11/01/glossary/#disqus_thread" class="article-comment-link">Comments</a>
+			
+		</div>
+	</footer>
+	
+	<header class="entry-header">
+		
+  
+    <h1 itemprop="name" class="entry-title">
+      <a class="article-title" href="/2014/11/01/glossary/">名词解释</a>
+    </h1>
+  
+
+	</header>
+	<div class="entry-content">
+		
+    	<p><strong>机会平等规则(Equal Odds Rule)</strong><br>你不可能预测你自己的成功。科学家，艺术家，发明者，作家，企业家，甚至任何人，创造出高价值成果和低价值，甚至无价值成果或项目的机率完全一样。唯一通过刻意练习改进技能的办法就是必须要经过大量的艰苦劳作。在我们看来，机会平等规则或许并不完美，但结果都是一样：practice more。</p>
+<p><strong>墨菲定律(Murphy’s law)</strong><br>Murphy’s law is an adage or epigram that is typically stated as: Anything that can go wrong, will go wrong.</p>
+<p><strong>本福特定律(Benford’s law)</strong><br>以一个城市的所有门牌号为例，有的街道门牌号可能在100多就结束了，有的在500多结束，有的在900多结束。注意到500多结束那条街一定包含了1、10+和100~199这些1开头的门牌号，而不包含9开头的百位数，只包含9及90+的以9开头的数，这样一来明显以1打头的就多于9打头的了。然后对整个城市的所有街道做一个综合，最终就满足本福特定律了。</p>
+<p><strong>洞穴寓言</strong><br>有一批人犹如囚徒，世代居住在一个洞穴之中，洞穴有条长长的通道通向外面，人们的脖子和脚被锁住不能环顾，只能面向洞壁。<br>他们身后有一堆火在燃烧，火和囚徒之间有一些人拿着器物走动、火光将器物变动不居的影像投在囚徒前面的洞壁上。囚徒不能回头，不知道影像的原因，以为这些影子是“实在”，用不同的名字称呼它们并习惯了这种生活。<br>当某一囚徒偶然挣脱枷锁回头看火时，发现以前所见是影像而非实物;当他继续努力，走出洞口时，眼睛受阳光刺激致使他什么也看不见，只是一片虚无。<br>他不得不回到洞内，但也追悔莫及，他恨自己看清了一切，因为这给他带来了更多的痛苦。<br>柏拉图还告诉我们，回到此岸、回到洞内并不可怕，可怕的是当我们洞悉了洞外、认清了彼岸的虚无现实再回到洞内，回到此岸。<br>洞外虚无;洞内负重，洞外是不辨方向的一片真空，洞内是不可自明的负重前行;……事实上，洞外、洞内尽管轻重各异，但都不可承受。<br>吴艾的“深呼吸”系列形象地隐喻了这个深刻的寓言，他试图在诘问世人：我们到底应该走出洞穴，还是回到洞穴呢?</p>
+
+    
+	</div>
+	<footer class="entry-footer">
+		<div class="entry-meta-footer">
+			<span class="category">
+				
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/relax/">relax</a>
+  </div>
+
+			</span>
+			<span class="tags">
+				
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/relax/">relax</a></li></ul>
+
+			</span>
+		</div>
+	</footer>
+	
+</article>
+
+
+	<hr class="article-devider">
+
+
+
+  
+    <article id="post-workflow" class="post">
+	<footer class="entry-meta-header">
+		<span class="meta-elements date">
+			<a href="/2014/08/26/workflow/" class="article-date">
+  <time datetime="2014-08-26T03:24:00.000Z" itemprop="datePublished">2014-08-26</time>
+</a>
+		</span>
+		<span class="meta-elements author">yantze</span>
+		<div class="commentscount">
+			
+				<a href="http://vastiny.com/2014/08/26/workflow/#disqus_thread" class="article-comment-link">Comments</a>
+			
+		</div>
+	</footer>
+	
+	<header class="entry-header">
+		
+  
+    <h1 itemprop="name" class="entry-title">
+      <a class="article-title" href="/2014/08/26/workflow/">WorkFlow</a>
+    </h1>
+  
+
+	</header>
+	<div class="entry-content">
+		
+    	<h2 id="Windows:_Hyper-V_+_CentOS">Windows: Hyper-V + CentOS</h2><p>这篇文章虽然是讲Hyper-V虚拟机的灵活运用，但是里面提到的tmux,samba和一些其它的linux命令很可能会提升你的幸福感.</p>
+<h2 id="应用场景">应用场景</h2><p><strong>可以做什么</strong></p>
+<ul>
+<li>linux:运维，开发所有linux应用，快速搭建LNMP/LAMP，docker等一系列工程，并且可以当作一个工作站，linux的界面都不用开启</li>
+<li>集群:前段时间，就是用Hyper-V开了三台CentOS做一个solr+nutch+hadoop集群，效果很不错</li>
+</ul>
+<p><strong>不可以</strong></p>
+<ul>
+<li>图形处理，涉及到图形的内容都不擅长，当然也可以做，但是没有其它虚拟机做得好</li>
+<li>linux图形界面不够流畅，图形延时很大(windows图形界面就很流畅)</li>
+<li>没有usb和声卡功能！</li>
+</ul>
+<h2 id="架构">架构</h2><p><strong>Hyper-V</strong><br>配置虚拟交换机三个，wlan(外网)、vlan(内部网)、wifi(无线网)<br>我把这三个网卡都加载到了centos，网段为(都是系统自动配置)</p>
+<pre><code><span class="label">wlan:</span><span class="number">192.168</span>.100.0/<span class="number">24</span> 或者 HDCP
+<span class="label">vlan:</span><span class="number">192.168</span>.137.0/<span class="number">24</span>
+<span class="label">wifi:</span>DHCP
+</code></pre><p>网卡的完美搭配<br>打开网络和共享中心,选择本地网络,属性,共享选项卡,选择共享给vlan这个网卡.<br>wlan共享给vlan之后的ip地址默认为192.168.137.1</p>
+<p>vlan网卡出现几种异常<br>vlan连不上网,但是支持DNS解析,用管理员cmd执行:<code>net start sharedaccess</code><br>如果还是不能使用这个功能,尝试打开本地网络的父网卡属性,因特网共享给vlan.</p>
+<p><strong>Windows Master的配置</strong><br>hosts:<br>因为常常ip会变，所以就直接在hosts文件里面配置一下，以后直接用域名就可以访问<br>192.168.137.131 wess<br>putty:<br>通过快捷方式 <code>E:\program\shortcut\putty.exe -i d:\Work\ssh\wess.ppk -P 22333 yantze@wess</code> 实现无密码自动登录centos</p>
+<p><strong>CentOS</strong><br>zsh:<br>提供了很多实用的技巧</p>
+<p>tmux:<br>实现一个putty可以开多个窗口，关闭putty，继续后台执行等强大的功能</p>
+<p>vim:<br>如果你喜欢，就是一个强大的编辑器</p>
+<p>samba:<br>windows和centos通过smb协议共享文档，可以通过这个实现IDE编程<br>samba在linux下配置容易出错，可以参考我的这个配置,<a href="https://github.com/yantze/dotfiles/blob/master/misc/samba.smb.conf#L300" target="_blank" rel="external">链接</a><br>配置好后，执行testparm，测试smb是否正确配置<br>在Windows资源管理器里面登录的时候，用户名一定要在前面加’\’反斜杠,因为Windows用户名的格式是’域\用户名’</p>
+<p>brew:<br>CentOS居然也可以用brew安装最新的软件</p>
+<p>windows与linux互连:<br>putty、tmux、vim与xserver通信，使得<a href="http://www.cnblogs.com/vastiny/tag/route/" target="_blank" rel="external">linux与windows共享剪贴板(clipboard)</a></p>
+<h2 id="应用案例">应用案例</h2><p><strong>路由</strong><br>多网卡环境不得不说路由的问题！<br>可以通过route / ip route 操作，我自己之前写过一些关于route的例子,<a href="http://www.cnblogs.com/vastiny/tag/route/" target="_blank" rel="external">链接</a></p>
+<p><strong>docker</strong><br>docker的操作官网都有，操作起来很简洁。<br>docker本来有一个观念，与vagrant不同就是，docker打算一个程序用一个container！这才能体现出它的简洁之美</p>
+<p><strong>LNMP/LAMP</strong><br>这个就不用多说了，配置好就行了</p>
+<p>mac下的vagrant<br>mac下的vagrant类似windows下linux上的docker，效果还不错</p>
+<h2 id="windows">windows</h2><p><strong>命令行</strong><br>autojump+cmd,正在使用,简单就好<br>babun，很多的特性，接近linux console风格，软件构成：cmd+cygwin<br>cmder+autojump，很多的特性，没有babun方便,软件构成：cmd+conmou+cmder+clink+msysgit+mingw</p>
+<h2 id="注">注</h2><ul>
+<li>Windows8集成Hyper-V，不可以和vitrulBox, VMware等其它虚拟机一起使用</li>
+<li>启用hyper-V组件就可以使用，因为是系统本来就支持的，性能方面做得很不错</li>
+<li>通过hyper-V安装CentOS6或者7，试过很多linux发行版，我推荐使用CentOS</li>
+<li>Hyper-V原生支持PowerShell批量部署</li>
+</ul>
+<h2 id="屏幕截图">屏幕截图</h2><p><img src="/image/putty_desktop.png" alt=""><br><img src="/image/putty_html.png" alt=""></p>
+
+    
+	</div>
+	<footer class="entry-footer">
+		<div class="entry-meta-footer">
+			<span class="category">
+				
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/tools/">tools</a>
+  </div>
+
+			</span>
+			<span class="tags">
+				
+			</span>
+		</div>
+	</footer>
+	
+</article>
+
+
+	<hr class="article-devider">
+
+
+
+  
+    <article id="post-concept" class="post">
+	<footer class="entry-meta-header">
+		<span class="meta-elements date">
+			<a href="/2014/08/15/concept/" class="article-date">
+  <time datetime="2014-08-15T10:18:00.000Z" itemprop="datePublished">2014-08-15</time>
+</a>
+		</span>
+		<span class="meta-elements author">yantze</span>
+		<div class="commentscount">
+			
+				<a href="http://vastiny.com/2014/08/15/concept/#disqus_thread" class="article-comment-link">Comments</a>
+			
+		</div>
+	</footer>
+	
+	<header class="entry-header">
+		
+  
+    <h1 itemprop="name" class="entry-title">
+      <a class="article-title" href="/2014/08/15/concept/">算法之美</a>
+    </h1>
+  
+
+	</header>
+	<div class="entry-content">
+		
+    	<h3 id="第一题">第一题</h3><p>一个专杀矮人的巨人让10个矮人从低到高排列，每个矮人能看见前面所有比他矮的人。巨人随机把白色或者黑色帽子放在每个矮人头上。矮人看不到自己的帽子。巨人告诉矮人，他将要求每个矮人回答帽子的颜色，从最高的开始。如果谁答错了就杀掉谁。每个矮人都能听见前一个人的回答，但是听不见被杀的声音。该用什么方法才能保证矮人被杀的数量最少，至少能挽救几个人的生命？<br>粗略答案:<a href="http://zhidao.baidu.com/question/582794545409870245.html" target="_blank" rel="external">link</a></p>
+<p>+2014-06-30 17:25</p>
+<h3 id="第二题">第二题</h3><p>王师傅是卖鞋的，一双鞋进价 20 元卖 30 元，顾客来买鞋给了张 50 的，王师傅没有零钱，于是找邻居换了 50 元零钱。<br>事后邻居发现钱是假的，王师傅又赔了邻居 50 元。<br>请问：王师傅一共损失了多少钱？<br>详细答案:<a href="http://justjavac.com/other/2013/08/11/how-much-money-has-wang-lost.html" target="_blank" rel="external">link</a></p>
+<p>+2014-07-20 10:22</p>
+<h3 id="第三题">第三题</h3><p>假设有三扇门，其中一扇门后面有奖，还有一个主持人，主持人知道哪扇门后面有奖。<br>你先随机选择一扇门，然后主持人会帮你打开另外两扇门中的一扇，可以确定的是，打开的这扇门肯定没有奖品。<br>现在，你有一个改变主意的机会，即在剩下的两扇门中，你可以坚持选择你本来选中的这扇门，也可以改变主意选择另外的一扇门。<br>问：你改变主意和不改变主意，中奖的概率分别是多少？<br>详细答案:<a href="http://www.v2ex.com/t/90960#reply47" target="_blank" rel="external">link</a><br>进阶:<a href="http://www.v2ex.com/t/71793" target="_blank" rel="external">link</a></p>
+<p>+2014-08-16 18:18:00</p>
+<h3 id="第四“题”">第四“题”</h3><p>因为是译言网的翻译，所以直接贴它的文章网址吧<br>这篇文章很不错，总共有十二个问题，都讲得很容易懂，三门的问题这里有最好的解答。<br><a href="http://select.yeeyan.org/view/AhyuChen/357495" target="_blank" rel="external">最具争议的12个数学事实</a></p>
+<p>+2015-04-16 19:54:48</p>
+<h3 id="第五题">第五题</h3><p>两只青蛙绕操场跳，一只比另一只每次跳的远一点，求相遇时间</p>
+<p><code>changelog:</code><br>write: 2014-06-11 21:24<br>add forth questiong: 2014-08-13 22:57</p>
+
+    
+	</div>
+	<footer class="entry-footer">
+		<div class="entry-meta-footer">
+			<span class="category">
+				
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/relax/">relax</a>
+  </div>
+
+			</span>
+			<span class="tags">
+				
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/lts/">lts</a></li></ul>
+
+			</span>
+		</div>
+	</footer>
+	
+</article>
+
+
+	<hr class="article-devider">
+
+
+
+  
+    <article id="post-yaf" class="post">
+	<footer class="entry-meta-header">
+		<span class="meta-elements date">
+			<a href="/2014/06/25/yaf/" class="article-date">
+  <time datetime="2014-06-25T13:24:46.000Z" itemprop="datePublished">2014-06-25</time>
+</a>
+		</span>
+		<span class="meta-elements author">yantze</span>
+		<div class="commentscount">
+			
+				<a href="http://vastiny.com/2014/06/25/yaf/#disqus_thread" class="article-comment-link">Comments</a>
+			
+		</div>
+	</footer>
+	
+	<header class="entry-header">
+		
+  
+    <h1 itemprop="name" class="entry-title">
+      <a class="article-title" href="/2014/06/25/yaf/">Yaf和Requirejs</a>
+    </h1>
+  
+
+	</header>
+	<div class="entry-content">
+		
+    	<p>yaf简介<br>Yaf有着和Zend Framework相似的API, 相似的理念, 而同时又保持着对Bingo的兼容, 以此来提高开发效率, 规范开发习惯. 本着对性能的追求, Yaf把框架中不易变的部分抽象出来,采用PHP扩展实现(c语言),以此来保证性能.在作者自己做的简单测试中, Yaf和原生的PHP在同样功能下, 性能损失小于10%, 而和Zend Framework的对比中, Yaf的性能是Zend Framework的50-60倍.它提供了Bootstrap, 路由, 分发, 视图, 插件, 是一个全功能的PHP框架。</p>
+<p>requirejs简介<br>RequireJS是一个Javascript 文件和模块框架，不仅仅用于加载模块依赖和相关的命令，RequireJS帮助我们写出模块化的JavaScript代码，这非常有利于代码的可扩展性和重用性。 并且在一般的webapp很多人都在使用这种模块化的开发方式，国内有一个很好的模块化框架是sea.js，很受好评。</p>
+<p>项目简介：<br>放在了github上，<a href="https://github.com/yantze/yaf" target="_blank" rel="external">https://github.com/yantze/yaf</a><br>项目demo在 <a href="http://cartbyyaf.sinaapp.com" target="_blank" rel="external">http://cartbyyaf.sinaapp.com</a></p>
+<p>架构图<br>编写举例<br>性能评测</p>
+
+    
+	</div>
+	<footer class="entry-footer">
+		<div class="entry-meta-footer">
+			<span class="category">
+				
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/tools/">tools</a>
+  </div>
+
+			</span>
+			<span class="tags">
+				
+			</span>
+		</div>
+	</footer>
+	
+</article>
+
+
+	<hr class="article-devider">
+
+
+
+  
+  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    </nav>
+  
+
+    </div>
+    <div class="mb-search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="q" value="site:vastiny.com">
+  </form>
+</div>
+<footer id="footer">
+	<h1 class="footer-blog-title">
+		<a href="/">Vastiny</a>
+	</h1>
+	<span class="copyright">
+		&copy; 2015 yantze<br>
+		Modify from <a href="http://sanographix.github.io/tumblr/apollo/" target="_blank">Apollo</a> theme, designed by <a href="http://www.sanographix.net/" target="_blank">SANOGRAPHIX.NET</a><br>
+		Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	</span>
+</footer>
+    
+<script>
+  var disqus_shortname = 'vastiny';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//go.disqus.com/count.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+  </div>
+</body>
+</html>
