@@ -70,6 +70,7 @@ plugins:
 - hexo-generator-feed
 - hexo-generator-sitemap
 - hexo-renderer-ejs
+- hexo-renderer-markdown-it
 
 # Deployment
 ## Docs: http://hexo.io/docs/deployment.html

@@ -95,5 +95,5 @@ cmder+autojump，很多的特性，没有babun方便,软件构成：cmd+conmou+c
 
 
 ##屏幕截图
-![](/image/putty_desktop.png)
-![](/image/putty_html.png)
+![](/images/putty_desktop.png)
+![](/images/putty_html.png)
