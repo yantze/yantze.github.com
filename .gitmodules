@@ -1,7 +1,0 @@
-[submodule "themes/mnmlpress"]
-	path = themes/mnmlpress
-	url = git://github.com/joyceim/hexo-theme-mnmlpress.git
-[submodule ".deploy"]
-	path = .deploy
-	url = https://github.com/yantze/yantze.github.com.git
-	branch = gh-pages
