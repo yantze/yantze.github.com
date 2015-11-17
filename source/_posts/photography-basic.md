@@ -42,11 +42,11 @@ categories: photography
 ![exposure_works](images/p308.jpg)
 
 
-![](images/p401.png)
 光线穿入皮肤
+![](images/p401.png)
 
 
 ## 本文图片和技巧来自于：
-[http://snapsnapsnap.photos/a-beginners-guide-for-manual-controls-in-iphone-photography-white-balance/](http://snapsnapsnap.photos/a-beginners-guide-for-manual-controls-in-iphone-photography-white-balance/)
-[http://snapsnapsnap.photos/a-beginners-guide-for-manual-controls-in-iphone-photography-exposure/](http://snapsnapsnap.photos/a-beginners-guide-for-manual-controls-in-iphone-photography-exposure/)
-[http://snapsnapsnap.photos/a-beginners-guide-for-manual-controls-in-iphone-photography-focus/](http://snapsnapsnap.photos/a-beginners-guide-for-manual-controls-in-iphone-photography-focus/)
+http://snapsnapsnap.photos/a-beginners-guide-for-manual-controls-in-iphone-photography-white-balance/
+http://snapsnapsnap.photos/a-beginners-guide-for-manual-controls-in-iphone-photography-exposure/
+http://snapsnapsnap.photos/a-beginners-guide-for-manual-controls-in-iphone-photography-focus/

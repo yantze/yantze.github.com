@@ -40,7 +40,7 @@ future: true
 highlight:
   enable: true
   line_number: true
-  tab_replace:
+  tab_replace: true
 
 # Category & Tag
 default_category: uncategorized
@@ -70,7 +70,28 @@ plugins:
 - hexo-generator-feed
 - hexo-generator-sitemap
 - hexo-renderer-ejs
-- hexo-renderer-markdown-it
+
+# Markdown-it config
+## Docs: https://github.com/celsomiranda/hexo-renderer-markdown-it/wiki
+markdown:
+  render:
+    html: true
+    xhtmlOut: false
+    breaks: true
+    linkify: true
+    typographer: true
+    quotes: '“”‘’'
+  plugins:
+    - markdown-it-footnote
+    - markdown-it-sup
+    - markdown-it-sub
+    - markdown-it-abbr
+  anchors:
+    level: 2
+    collisionSuffix: 'v'
+    permalink: true
+    permalinkClass: header-anchor
+    permalinkSymbol: '>'
 
 # Deployment
 ## Docs: http://hexo.io/docs/deployment.html

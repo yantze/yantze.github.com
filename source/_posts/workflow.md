@@ -4,11 +4,11 @@ tags:
 categories: tools
 ---
 
-##Windows: Hyper-V + CentOS
+## Windows: Hyper-V + CentOS
 这篇文章虽然是讲Hyper-V虚拟机的灵活运用，但是里面提到的tmux,samba和一些其它的linux命令很可能会提升你的幸福感.
 
 
-##应用场景
+## 应用场景
 **可以做什么**
 - linux:运维，开发所有linux应用，快速搭建LNMP/LAMP，docker等一系列工程，并且可以当作一个工作站，linux的界面都不用开启
 - 集群:前段时间，就是用Hyper-V开了三台CentOS做一个solr+nutch+hadoop集群，效果很不错
@@ -18,7 +18,7 @@ categories: tools
 - linux图形界面不够流畅，图形延时很大(windows图形界面就很流畅)
 - 没有usb和声卡功能！
 
-##架构
+## 架构
 **Hyper-V**
 配置虚拟交换机三个，wlan(外网)、vlan(内部网)、wifi(无线网)
 我把这三个网卡都加载到了centos，网段为(都是系统自动配置)
@@ -65,7 +65,7 @@ CentOS居然也可以用brew安装最新的软件
 windows与linux互连:
 putty、tmux、vim与xserver通信，使得[linux与windows共享剪贴板(clipboard)](http://www.cnblogs.com/vastiny/tag/route/)
 
-##应用案例
+## 应用案例
 **路由**
 多网卡环境不得不说路由的问题！
 可以通过route / ip route 操作，我自己之前写过一些关于route的例子,[链接](http://www.cnblogs.com/vastiny/tag/route/)
@@ -81,19 +81,19 @@ mac下的vagrant
 mac下的vagrant类似windows下linux上的docker，效果还不错
 
 
-##windows
+## windows
 **命令行**
 autojump+cmd,正在使用,简单就好
 babun，很多的特性，接近linux console风格，软件构成：cmd+cygwin
 cmder+autojump，很多的特性，没有babun方便,软件构成：cmd+conmou+cmder+clink+msysgit+mingw
 
-##注
+## 注
 - Windows8集成Hyper-V，不可以和vitrulBox, VMware等其它虚拟机一起使用
 - 启用hyper-V组件就可以使用，因为是系统本来就支持的，性能方面做得很不错
 - 通过hyper-V安装CentOS6或者7，试过很多linux发行版，我推荐使用CentOS
 - Hyper-V原生支持PowerShell批量部署
 
 
-##屏幕截图
+## 屏幕截图
 ![](/images/putty_desktop.png)
 ![](/images/putty_html.png)

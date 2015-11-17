@@ -3,21 +3,21 @@
   "version": "0.0.0",
   "private": true,
   "hexo": {
-    "version": "3.0.1"
+    "version": "3.1.1"
   },
   "dependencies": {
     "hexo": "^3.0.0",
     "hexo-deployer-git": "*",
-    "hexo-generator-feed": "*",
-    "hexo-generator-sitemap": "*",
     "hexo-generator-archive": "^0.1.0",
     "hexo-generator-category": "^0.1.0",
+    "hexo-generator-feed": "*",
     "hexo-generator-index": "^0.1.0",
+    "hexo-generator-sitemap": "*",
     "hexo-generator-tag": "^0.1.0",
     "hexo-renderer-ejs": "^0.1.0",
+    "hexo-renderer-markdown-it": "^3.4.0",
     "hexo-renderer-stylus": "^0.2.0",
-    "hexo-renderer-marked": "^0.2.4",
     "hexo-server": "^0.1.2",
-    "hexo-renderer-markdown-it": "*"
+    "markdown-it": "^4.4.0"
   }
 }

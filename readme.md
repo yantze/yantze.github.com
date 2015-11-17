@@ -32,3 +32,7 @@ hexo g
 https://github.com/chenall/hexo-theme-chenall
 
 http://howiefh.github.io/2014/04/20/hexo-optimize-and-my-theme-landscape-f/
+
+markdown-it 渲染 
+
+本渲染的示例： https://markdown-it.github.io

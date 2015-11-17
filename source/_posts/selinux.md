@@ -3,12 +3,11 @@ date: 2015-02-02 23:24
 tags:
 categories: linux
 ---
-
-##中文叙述
+## 中文叙述
 selinux就是一个强制访问控制系统(Security-Enhanced Linux),一般有两个策略,一个是NSA用的mls(restrict),一个是普通linux的用的targed,默认说的都是targed的策略.
  
-###常用情况
-####新装的apache服务器启动之后,只能本机访问,其它网络不能访问
+### 常用情况
+#### 新装的apache服务器启动之后,只能本机访问,其它网络不能访问
 这个是iptable或者centos7的firewall没有开放80端口.
 
 if use iptables
@@ -50,14 +49,14 @@ or firewall
 
 这个时候系统已经告诉你,已经转换成selinux认可的类型或者域了
 
-####限制用户对自己文档的不可操作
+#### 限制用户对自己文档的不可操作
 比如说我安排一个日志检查员,我不想让他执行程序,只是想让他看日志
 
     sebool allow_guest_exec_content off
 
 这样,那些默认的账户都是不能执行脚本文件的了.
 
-###一个有sudo权限的人,如何对他进行限制呢
+### 一个有sudo权限的人,如何对他进行限制呢
 当然可以在visudo中有个列表显示这个用户的执行程序名,也可以用这种selinux限制好了规则的方法,这里的restricteduser就是一个拥有sudo权限的账户
 
     semanage login -a -s user_u restricteduser
@@ -65,14 +64,14 @@ or firewall
 这里说明一个就是user_u是user_r和user_t的合体,user_r代表的是可以执行哪些程序,user_t代表的是那些程序它有什么权限.
 比如说这个用户拥有启动httpd服务的权限,但是他对这个网站的内容确是不可编辑的.
 
-###简明运作
+### 简明运作
 selinux是构建在linux系统权限控制之上的一套系统,linux权限控制明显的一个问题就是,只分user/group/other,这个other有很多不同的用户,如果other的权限过大,会导致很多的问题出现.
 selinux要的就是,user的权限是整个selinux系统中最小权限的存在.selinux也有一个天生缺陷,就是总有一个GOD可以操控一切.
 在redhat系的文件系统中,文件属性后面有个小点或者加号,这个就是selinux和acl的设置:
 当文件或者文件夹只使用了selinux context的属性，在ls -l时,文件后面会是一个点,但是使用了setfacl(set file access control lists)后,点号就会变成加号.
 
 
-###简单的方法
+### 简单的方法
 远离这一切,可以直接关闭iptables和selinux,很明显很不安全 :)
 
     systemctl mask firewalld
@@ -86,7 +85,7 @@ selinux要的就是,user的权限是整个selinux系统中最小权限的存在.
 更详细的说明，请看我下面的笔记。
 
 ---
-##SELINUX DETAIL
+## SELINUX DETAIL
 selinux has two policy for targeted and stricted,CentOS apply targeted.
 
 
@@ -145,7 +144,7 @@ MLS: Multi-LevelSecurity(MLS) and non-MLS
 
 
 #Advance
-##Basic
+## Basic
 system_u:object_r:locale_t:s0
 - Each Linux user account maps to an SELinux user
 - the root user that owns the file is mapped to the system_u SELinux user. This mapping is done by the SELinux policy.
@@ -156,12 +155,12 @@ system_u:object_r:locale_t:s0
 
 SELinux Users are suffixed by "u", roles are suffixed by "r" and types (for files) or domains (for processes) are suffixed by "_t".
 
-###Permernet store
+### Permernet store
 chcon is a temporary measure, a file system relabel or running the restorecon command will revert the file back to its original context.
 But if you don't know the file's correct context, how does the system know which context to apply when it runs restorecon?
 Conveniently, SELinux "remembers" the context of every file or directory in the server. In CentOS 7, contexts of files already existing in the system are listed in the /etc/selinux/targeted/contexts/files/file_contexts file. It's a large file and it lists every file type associated with every application supported by the Linux distribution. Contexts of new directories and files are recorded in the /etc/selinux/targeted/contexts/files/file_contexts.local file.
 
-##the SELinux domain
+## the SELinux domain
 
     cat /etc/selinux/targeted/contexts/files/file_contexts
 
@@ -179,7 +178,7 @@ Conveniently, SELinux "remembers" the context of every file or directory in the 
     -rw-r--r--. 1 root root  139 Dec 16 23:30 media
 
 
-###two-step process
+### two-step process
 
     semanage fcontext --add --type httpd_sys_content_t "/www(/.*)?"
     semanage fcontext --add --type httpd_sys_content_t "/www/html(/.*)?"
@@ -215,7 +214,7 @@ matchpathcon -V /www/html/index.html
     /www/html/index.html verified.
 
 
-##Domain Transition
+## Domain Transition
 So far we have seen how processes access file system resources. We will now see how processes access other processes.
 
 This transition is not something the application or the user can control. This has been stipulated in the SELinux policy that loads into memory as the system boots. In a non-SELinux server a user can start a process by switching to a more powerful account (provided she or he has the right to do so). In SELinux, such access is controlled by pre-written policies. And that's another reason SELinux is said to implement Mandatory Access Control.
@@ -240,7 +239,7 @@ As we can see below, the source domain has that permission:
 Found 1 semantic av rules:
    allow init_t ftpd_t : process transition ;
 
-###the SELinux user
+### the SELinux user
  Multi Category Security (MLS / MCS)
 SELinux users are defined in the policy that's loaded into memory at boot time, and there are only a few of these users.
 When SELinux is enforced, each regular Linux user account is mapped to an SELinux user account. There can be multiple user accounts mapped to the same SELinux user. This mapping enables a regular account to inherit the permission of its SELinux counterpart.
@@ -255,10 +254,10 @@ So what this really means is that any Linux user that maps to the unconfined_u u
 id -Z
 
 
-##Other
+## Other
 restorecond - daemon that watches for file creation and then sets the default SELinux file context
 
-####Further Reading:
+#### Further Reading:
 [intro selinux by DO](https://www.digitalocean.com/community/tutorials/an-introduction-to-selinux-on-centos-7-part-2-files-and-processes)
 [redhat selinux offical](https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7-Beta/html/SELinux_Users_and_Administrators_Guide/chap-Security-Enhanced_Linux-Introduction.html)
 [redhat selinux offical pdf version](https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/pdf/Security-Enhanced_Linux/Red_Hat_Enterprise_Linux-6-Security-Enhanced_Linux-en-US.pdf)
