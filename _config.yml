@@ -17,3 +17,6 @@ github_username: yantze
 
 # Build settings
 markdown: kramdown
+
+# There have many themes
+# https://github.com/poole

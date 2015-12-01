@@ -35,6 +35,9 @@ date: 2014-06-08 11:32:00
 
 记录此时的心情
 
+<!-- xiami player area-->
+<p id="xiami"></p><script src="http://xiamip.sinaapp.com/player.js?song=2070572" ></script><!-- end -->
+
 <script>
 console.log("%cVastiny","font-family:Arial; font-size:124px; font-weight:bold; color:#bada55; -webkit-text-stroke:1px black;");
 </script>
