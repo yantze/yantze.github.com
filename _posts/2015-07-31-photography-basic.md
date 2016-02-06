@@ -1,10 +1,10 @@
 ---
 layout: post
+title: 发掘手机照相的能力-基础知识篇
 date: 2015-07-31 23:24
 categories: photography
 ---
 
-# 发掘手机照相的能力-基础知识篇
 > The basic goal of proper photography is to make your objects and subjects look as natural and neutral as possible. 
 
 
