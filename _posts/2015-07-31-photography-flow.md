@@ -87,12 +87,12 @@ categories: photography
 ## 图像示例：
 
 ## 欣赏：
-![](./_image/2016-02-06 14-22-14.jpg)
+![](http://7xppiy.com1.z0.glb.clouddn.com/vastiny_image/2016-02-06 14-22-14.jpg)
 赖诺·皮耶蒂宁, 《皮耶蒂宁家族，1910年》，“奥托克罗姆”天然彩色相片技术。藏于芬兰摄影博物馆[^4]
 Reino Pietinen, Family Pietinen, 1910′s, Autochrome. The Finnish Museum of Photography
 
 
-![](./_image/2016-02-06 14-23-00.jpg)
+![](http://7xppiy.com1.z0.glb.clouddn.com/vastiny_image/2016-02-06 14-23-00.jpg)
 茵托·康拉德·仁荷，《男孩们在海塔拉蒂港》，1908年，赫尔辛基，玻璃底片。藏于芬兰摄影博物馆。[^4]
 I.K. Inha，Boys at Hietalahti harbour. 1908, .Helsinki. Glass negative. The Finnish Museum of Photography
 

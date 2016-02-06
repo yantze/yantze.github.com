@@ -31,26 +31,26 @@ categories: photography
 **户外、光线良好 (most outdoor，well-lit scenes)**
 :   使用自动白平衡
 
-![](./_image/2016-02-06 15-39-59.jpg)
+![](http://7xppiy.com1.z0.glb.clouddn.com/vastiny_image/2016-02-06 15-39-59.jpg)
 
 **阴凉、云层 (shade, cloud cover)**
 :   使用情景模式 (preset) ，自动白平衡出现‘偏蓝’或者‘偏冷’
 
-![](./_image/2016-02-06 15-40-09.jpg)
+![](http://7xppiy.com1.z0.glb.clouddn.com/vastiny_image/2016-02-06 15-40-09.jpg)
 
 **心中有自己的画面色彩**
 :   使用手动模式，根据自己认为最真实的色彩去调节
 
-![](./_image/2016-02-06 15-40-18.jpg)
+![](http://7xppiy.com1.z0.glb.clouddn.com/vastiny_image/2016-02-06 15-40-18.jpg)
 
 ## 2. 曝光（exposure）
 曝光，就是光线通过镜头到达感光器的多少。
 
-![](./_image/2016-02-06 15-26-34.jpg)
+![](http://7xppiy.com1.z0.glb.clouddn.com/vastiny_image/2016-02-06 15-26-34.jpg)
 光线通过滤镜、光圈、快门、感光元件，生成「图片」，曝光主要因这五个部分影响。
 
 
-![](./_image/2016-02-06 15-30-56.jpg)
+![](http://7xppiy.com1.z0.glb.clouddn.com/vastiny_image/2016-02-06 15-30-56.jpg)
 常见的一些快门速度，1/50、1/1000 这里面；ISO，100、200 这些；焦距，f2.2、f2.8 这些。[^2]
 这里由一张在不同曝光的情况下，白肤色的人可以变得更加丰富饱满的图片，但是没有图片都是别人的，实在不好意思放在这里。
 
