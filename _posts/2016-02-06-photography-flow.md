@@ -1,12 +1,10 @@
 ---
 layout: post
-title: Photography-Flow
 date: 2015-07-31 23:24
 categories: photography
-tags: lts
 ---
 
-# 发掘手机照相的能力-流程记录
+# 发掘手机照相的能力-记录流程
 > 本文只是初学的时候，记录流程和对基本技巧的思考，很浅、很浅
 
 ## 手机拍摄期基本功能

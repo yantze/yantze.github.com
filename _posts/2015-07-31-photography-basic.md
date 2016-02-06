@@ -1,6 +1,5 @@
 ---
 layout: post
-title: 拍照基础知识
 date: 2015-07-31 23:24
 categories: photography
 ---
