@@ -28,8 +28,6 @@ categories: photography
 #### 1.2 使用情景
 其实最好就是自动白平衡不自然就换到情景白平衡、再不自然就换到开儿文轮来手动调整。
 
-或者使用下图的方法：
-
 #### 1.3 示例
 **户外、光线良好 (most outdoor，well-lit scenes)**
 :   使用自动白平衡
@@ -37,16 +35,15 @@ categories: photography
 **阴凉、云层 (shade, cloud cover)**
 :   使用情景模式 (preset) ，自动白平衡出现‘偏蓝’或者‘偏冷’
 
-**心中已有了自己的色彩**
-:   使用手动模式，根据自己最真实的色彩去调节
+**心中有自己的画面色彩**
+:   使用手动模式，根据自己认为最真实的色彩去调节
 
 ## 2. 曝光(exposure)
 曝光，就是光线通过镜头到达感光器的多少。
+光线穿入皮肤那种通透之感。
 
-光线穿入皮肤
 
-
-## 0. 参考
+## 3. 参考
 - [white-balance](http://snapsnapsnap.photos/a-beginners-guide-for-manual-controls-in-iphone-photography-white-balance/)
 - [exposure](http://snapsnapsnap.photos/a-beginners-guide-for-manual-controls-in-iphone-photography-exposure/)
 - [focus](http://snapsnapsnap.photos/a-beginners-guide-for-manual-controls-in-iphone-photography-focus/)
