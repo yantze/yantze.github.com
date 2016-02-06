@@ -16,18 +16,19 @@ categories: photography
 
 ## 后期处理
 ### 手机端基本编辑
+
 - **特效(FX)**
 - **色调**
 - **白平衡**
+
 ### 高级编辑
+
 - **自定义功能区**
 - **笔刷**
 - **分层**
 
 > 红眼、旋转、拉直、晕影，这些靠自己拍摄手法了。
 > 剪裁、边框、标题等，根据照片本身是否需要添加。
-
-
 
 ## 构成手法：
 - 构图（美学）：三分法（九宫格，黄金比例0.618，螺旋分布）、画面平衡（比如留白）、照片平衡感（比如水平）、空间感（比如层次）、比例感、张力感
@@ -57,6 +58,7 @@ categories: photography
     - 耳机线控（自拍竿）
 
 ## 拍照的详细流程
+
 ### 目的
 - 主体 - 最重要的一个物
 - 搭配 - 衍生物的意义在于衬托
@@ -85,12 +87,12 @@ categories: photography
 ## 图像示例：
 ## 欣赏：
 来自于「影像收藏与策展」[^4]
-![](./_image/2016-02-06 14-22-14.jpg)
+![](http://7xppiy.com1.z0.glb.clouddn.com/vastiny_image/2016-02-06 14-22-14.jpg)
 赖诺·皮耶蒂宁, 《皮耶蒂宁家族，1910年》，“奥托克罗姆”天然彩色相片技术。藏于芬兰摄影博物馆[4]
 Reino Pietinen, Family Pietinen, 1910′s, Autochrome. The Finnish Museum of Photography
 
 
-![](./_image/2016-02-06 14-23-00.jpg)
+![](http://7xppiy.com1.z0.glb.clouddn.com/vastiny_image/2016-02-06 14-23-00.jpg)
 茵托·康拉德·仁荷，《男孩们在海塔拉蒂港》，1908年，赫尔辛基，玻璃底片。藏于芬兰摄影博物馆。[^4]
 I.K. Inha，Boys at Hietalahti harbour. 1908, .Helsinki. Glass negative. The Finnish Museum of Photography
 
