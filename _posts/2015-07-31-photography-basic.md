@@ -59,10 +59,12 @@ categories: photography
 - 自动对焦
 - 点击屏幕对焦
 - 长按屏幕对焦
+
 ## 4. 参考
 - [white-balance](http://snapsnapsnap.photos/a-beginners-guide-for-manual-controls-in-iphone-photography-white-balance/)
 - [exposure](http://snapsnapsnap.photos/a-beginners-guide-for-manual-controls-in-iphone-photography-exposure/)
 - [focus](http://snapsnapsnap.photos/a-beginners-guide-for-manual-controls-in-iphone-photography-focus/)
+
 ## 5.引用
 [^1]: [white-balance](http://snapsnapsnap.photos/a-beginners-guide-for-manual-controls-in-iphone-photography-white-balance/)
 [^2]:  [exposure](http://snapsnapsnap.photos/a-beginners-guide-for-manual-controls-in-iphone-photography-exposure/)
