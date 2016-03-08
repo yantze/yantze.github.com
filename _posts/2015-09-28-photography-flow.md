@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 发掘手机照相的能力-流程记录
-date: 2015-07-31 23:24
+date: 2015-09-28 23:24
 categories: photography
 ---
 

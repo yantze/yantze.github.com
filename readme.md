@@ -21,3 +21,13 @@ https://github.com/jasonlong/cayman-theme
 
 :%s/\.\/_image/http:\/\/7xppiy.com1.z0.glb.clouddn.com\/vastiny_image/i
 ```
+
+## 常见输入Helper
+### 个别输入法难打的字符
+「 」
+『 』
+
+## 同步的 fileshook
+```
+git add . -A && git commit -a && git push
+```
